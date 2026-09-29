@@ -1,0 +1,1784 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Minecraft Seed Game</title>
+<link href="https://fonts.cdnfonts.com/css/minecraft-4" rel="stylesheet">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@500;600;700&family=Press+Start+2P&display=swap" rel="stylesheet">
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+html, body { height: 100%; overflow: hidden; }
+
+/* ================= THEME VARIABLES ================= */
+body[data-theme="overworld"] { --panel:#C6C6C6;--panel-l:#DFDFDF;--panel-d:#8B8B8B;--panel-dd:#555;--accent:#3C8527;--accent-l:#5CB85C;--accent-d:#24520F;--accent-m:#4A9D3F;--accent-dd:#2D6318;--splash:#FFFF00;--splash-sh:#3F3F00;--text:#3F3F3F; }
+body[data-theme="nether"] { --panel:#B8A898;--panel-l:#D4C8B8;--panel-d:#7A6A5A;--panel-dd:#4A3A2A;--accent:#C42B0F;--accent-l:#E85B3F;--accent-d:#7A1A08;--accent-m:#B8351C;--accent-dd:#5A1005;--splash:#FFA500;--splash-sh:#4A2000;--text:#2A1A0A; }
+body[data-theme="end"] { --panel:#B0A8C0;--panel-l:#D0C8E0;--panel-d:#7A7290;--panel-dd:#4A4260;--accent:#7B2FBE;--accent-l:#A855F7;--accent-d:#3B0764;--accent-m:#9333EA;--accent-dd:#4C1D95;--splash:#E9D5FF;--splash-sh:#2E1065;--text:#2A2030; }
+body[data-theme="desert"] { --panel:#E8D5A0;--panel-l:#FFF0C8;--panel-d:#A89870;--panel-dd:#6B5A38;--accent:#C47A2F;--accent-l:#E8A050;--accent-d:#7A4A18;--accent-m:#D4903F;--accent-dd:#5A3510;--splash:#FFFFFF;--splash-sh:#8B4A00;--text:#5A4030; }
+body[data-theme="snow"] { --panel:#C8D8E8;--panel-l:#E8F4FF;--panel-d:#7A8AA0;--panel-dd:#4A5870;--accent:#2A7AA8;--accent-l:#5AAAFF;--accent-d:#104068;--accent-m:#3A8AC8;--accent-dd:#0A2A48;--splash:#FFFFFF;--splash-sh:#1A4870;--text:#2A3A50; }
+body[data-theme="ocean"] { --panel:#8AB8B0;--panel-l:#B0D8D0;--panel-d:#4A7870;--panel-dd:#2A4840;--accent:#1A8A9A;--accent-l:#40B8C8;--accent-d:#0A4A58;--accent-m:#20A0B0;--accent-dd:#052A38;--splash:#88FFFF;--splash-sh:#054A58;--text:#1A3A48; }
+body[data-theme="mushroom"] { --panel:#A89BB8;--panel-l:#C8BBD8;--panel-d:#6A5A78;--panel-dd:#3A2A48;--accent:#8B4A2F;--accent-l:#B87050;--accent-d:#4A2010;--accent-m:#A05A3F;--accent-dd:#2A0F08;--splash:#E8C8FF;--splash-sh:#3A1A55;--text:#2A1A38; }
+
+body {
+  font-family: 'Minecraft', 'MinecraftTen', 'Chakra Petch', 'Press Start 2P', monospace;
+  display: flex; align-items: center; justify-content: center;
+  padding: 12px; position: relative; overflow: hidden;
+  image-rendering: pixelated; transition: background 0.5s;
+}
+body::before { content:''; position: fixed; inset: 0; z-index: -2; transition: background 0.5s; }
+body::after { content:''; position: fixed; bottom:0; left:0; right:0; height:30%; z-index:-1; transition: background 0.5s; }
+body[data-theme="overworld"]::before { background: radial-gradient(circle at 20% 15%, #FFFFFF 2px, transparent 2px), radial-gradient(circle at 75% 25%, #FFFFFF 1.5px, transparent 1.5px), linear-gradient(180deg, #87CEEB 0%, #A8D8F0 40%, #6BB6E0 100%); background-size: 300px 300px, 250px 250px, 100% 100%; }
+body[data-theme="overworld"]::after { background: radial-gradient(ellipse 40% 100% at 20% 0%, #4A8B3E 40%, transparent 40%), radial-gradient(ellipse 50% 100% at 70% 0%, #3E7A2E 40%, transparent 40%), linear-gradient(180deg, #3E7A2E 0%, #2A5520 100%); }
+body[data-theme="nether"]::before { background: radial-gradient(circle at 15% 30%, #FF4A20 4px, transparent 4px), radial-gradient(circle at 80% 50%, #FF6A30 3px, transparent 3px), linear-gradient(180deg, #4A0A0A 0%, #2A0505 100%); background-size: 200px 200px, 180px 180px, 100% 100%; }
+body[data-theme="nether"]::after { background: linear-gradient(180deg, transparent 0%, rgba(255,80,20,0.3) 100%), linear-gradient(180deg, #8B1A0A 0%, #5A0808 100%); }
+body[data-theme="end"]::before { background: radial-gradient(circle at 12% 20%, #FFFFFF 2px, transparent 2px), radial-gradient(circle at 88% 30%, #E9D5FF 2px, transparent 2px), linear-gradient(180deg, #1A0F2E 0%, #0A0420 50%, #050210 100%); background-size: 250px 250px, 280px 280px, 100% 100%; }
+body[data-theme="end"]::after { background: radial-gradient(ellipse 40% 100% at 25% 0%, #3A2A5A 40%, transparent 40%), linear-gradient(180deg, #3A2A5A 0%, #1A0F2E 100%); }
+body[data-theme="desert"]::before { background: radial-gradient(circle at 18% 22%, #C9B77D 3px, transparent 3px), radial-gradient(circle at 78% 38%, #B8A566 2px, transparent 2px), linear-gradient(180deg, #F8DE92 0%, #F0D27A 40%, #E0C77D 100%); background-size: 120px 120px, 100px 100px, 100% 100%; }
+body[data-theme="desert"]::after { background: radial-gradient(ellipse 60% 120% at 30% 0%, #E8D48E 50%, transparent 50%), linear-gradient(180deg, #E0C77D 0%, #C4A855 100%); }
+body[data-theme="snow"]::before { background: radial-gradient(circle at 20% 25%, #FFFFFF 3px, transparent 3px), radial-gradient(circle at 75% 45%, #FFFFFF 2px, transparent 2px), linear-gradient(180deg, #B8D4E8 0%, #A8C8E8 40%, #90B0D0 100%); background-size: 180px 180px, 160px 160px, 100% 100%; }
+body[data-theme="snow"]::after { background: radial-gradient(ellipse 60% 130% at 20% 0%, #F4F8FF 50%, transparent 50%), linear-gradient(180deg, #E8F0F8 0%, #C0D0E0 100%); }
+body[data-theme="ocean"]::before { background: radial-gradient(circle at 10% 40%, rgba(255,255,255,0.15) 4px, transparent 4px), radial-gradient(circle at 60% 55%, rgba(255,255,255,0.1) 3px, transparent 3px), linear-gradient(180deg, #1A4A7A 0%, #15406A 40%, #0F3050 100%); background-size: 220px 220px, 180px 180px, 100% 100%; }
+body[data-theme="ocean"]::after { background: radial-gradient(ellipse 70% 100% at 25% 0%, #2A5A8A 50%, transparent 50%), linear-gradient(180deg, #2A5A8A 0%, #1A3A5A 100%); }
+body[data-theme="mushroom"]::before { background: radial-gradient(circle at 15% 25%, #6A5A88 3px, transparent 3px), radial-gradient(circle at 45% 40%, #7A6A98 3px, transparent 3px), linear-gradient(180deg, #6A5A88 0%, #4A3A6A 40%, #2A1A4A 100%); background-size: 140px 140px, 160px 160px, 100% 100%; }
+body[data-theme="mushroom"]::after { background: radial-gradient(ellipse 60% 120% at 30% 0%, #A89BB8 50%, transparent 50%), linear-gradient(180deg, #8B7BA8 0%, #6A5A88 100%); }
+
+/* ================= SCENE DECOR ================= */
+.scene-decor { position: fixed; inset: 0; pointer-events: none; overflow: hidden; z-index: 0; }
+.decor { display: none; position: absolute; inset: 0; }
+body[data-theme="desert"] .decor-desert, body[data-theme="snow"] .decor-snow, body[data-theme="ocean"] .decor-ocean, body[data-theme="mushroom"] .decor-mushroom { display: block; }
+.sun-square { position: absolute; top: 6%; right: 8%; width: 70px; height: 70px; background: #FFF7A0; box-shadow: inset 8px 8px 0 #FFFFFF, inset -8px -8px 0 #F0C840, 0 0 60px 20px rgba(255,230,120,0.5); image-rendering: pixelated; }
+.cactus-svg { position: absolute; image-rendering: pixelated; }
+.cactus-1 { bottom: 8%; left: 3%; width: 60px; height: 140px; }
+.cactus-2 { bottom: 12%; right: 4%; width: 46px; height: 110px; }
+.cactus-3 { bottom: 5%; left: 22%; width: 34px; height: 80px; opacity: 0.8; }
+.dune { position: absolute; bottom: 0; left: -10%; right: -10%; height: 22%; background: #D4BC74; border-radius: 50% 50% 0 0 / 30% 30% 0 0; }
+.dune.d2 { height: 18%; left: -30%; right: 30%; background: #E0C77D; border-radius: 50% 50% 0 0 / 40% 40% 0 0; z-index: 1; }
+.spruce { position: absolute; bottom: 6%; image-rendering: pixelated; }
+.spruce-1 { left: 5%; width: 100px; height: 160px; }
+.spruce-2 { right: 6%; width: 80px; height: 130px; }
+.spruce-3 { left: 18%; width: 60px; height: 100px; opacity: 0.9; }
+.snowflake { position: absolute; top: -20px; width: 6px; height: 6px; background: #FFFFFF; box-shadow: 0 0 4px rgba(255,255,255,0.8); animation: snowFall linear infinite; }
+@keyframes snowFall { 0% { transform: translateY(0) translateX(0); opacity: 0; } 10% { opacity: 1; } 90% { opacity: 1; } 100% { transform: translateY(105vh) translateX(40px); opacity: 0; } }
+.snowflake:nth-child(1) { left: 8%; animation-duration: 6s; }
+.snowflake:nth-child(2) { left: 22%; animation-duration: 8s; animation-delay: 1.5s; }
+.snowflake:nth-child(3) { left: 38%; animation-duration: 7s; animation-delay: 0.8s; }
+.snowflake:nth-child(4) { left: 55%; animation-duration: 9s; animation-delay: 2.2s; }
+.snowflake:nth-child(5) { left: 70%; animation-duration: 6.5s; animation-delay: 0.3s; }
+.snowflake:nth-child(6) { left: 85%; animation-duration: 8.5s; animation-delay: 1.8s; }
+.snowflake:nth-child(7) { left: 45%; animation-duration: 7.5s; animation-delay: 3s; width: 4px; height: 4px; }
+.snowflake:nth-child(8) { left: 92%; animation-duration: 5.5s; animation-delay: 0.5s; width: 5px; height: 5px; }
+.seaweed { position: absolute; bottom: 5%; width: 16px; background: linear-gradient(180deg, #1A8A4A 0%, #0A5A2A 100%); border-radius: 8px 8px 0 0; animation: sway 3s ease-in-out infinite; box-shadow: inset 2px 0 0 #40B86A, inset -2px 0 0 #0A3A1A; }
+@keyframes sway { 0%,100% { transform: rotate(-3deg); } 50% { transform: rotate(3deg); } }
+.sw-1 { left: 4%; height: 100px; }
+.sw-2 { left: 8%; height: 70px; animation-delay: 0.5s; }
+.sw-3 { right: 5%; height: 90px; animation-delay: 0.3s; }
+.sw-4 { right: 10%; height: 60px; animation-delay: 0.8s; }
+.sw-5 { left: 15%; height: 50px; animation-delay: 1.2s; opacity: 0.7; }
+.coral { position: absolute; bottom: 5%; width: 40px; height: 50px; image-rendering: pixelated; }
+.coral-1 { right: 15%; }
+.coral-2 { left: 20%; }
+.bubble { position: absolute; bottom: -20px; width: 10px; height: 10px; background: radial-gradient(circle, rgba(255,255,255,0.6) 20%, rgba(136,255,255,0.3) 60%, transparent 70%); border-radius: 50%; animation: bubbleUp linear infinite; }
+@keyframes bubbleUp { 0% { transform: translateY(0) scale(0.5); opacity: 0; } 10% { opacity: 0.9; } 90% { opacity: 0.9; } 100% { transform: translateY(-105vh) scale(1.2); opacity: 0; } }
+.bubble:nth-child(1) { left: 12%; animation-duration: 7s; }
+.bubble:nth-child(2) { left: 28%; animation-duration: 9s; animation-delay: 2s; }
+.bubble:nth-child(3) { left: 48%; animation-duration: 8s; animation-delay: 1s; }
+.bubble:nth-child(4) { left: 65%; animation-duration: 10s; animation-delay: 3.5s; width: 14px; height: 14px; }
+.bubble:nth-child(5) { left: 82%; animation-duration: 7.5s; animation-delay: 0.5s; }
+.bubble:nth-child(6) { left: 92%; animation-duration: 9.5s; animation-delay: 2.5s; width: 8px; height: 8px; }
+.fish { position: absolute; width: 40px; height: 18px; background: #FF9060; border-radius: 4px; box-shadow: inset 3px 3px 0 #FFB080, inset -3px -3px 0 #C05A30; animation: swim 20s linear infinite; }
+.fish::before { content: ''; position: absolute; left: -12px; top: 4px; width: 0; height: 0; border-top: 5px solid transparent; border-bottom: 5px solid transparent; border-right: 12px solid #FF9060; }
+.fish::after { content: ''; position: absolute; right: 6px; top: 5px; width: 4px; height: 4px; background: #000; border-radius: 50%; }
+@keyframes swim { 0% { left: -15%; transform: scaleX(1); } 49% { left: 115%; transform: scaleX(1); } 50% { left: 115%; transform: scaleX(-1); } 99% { left: -15%; transform: scaleX(-1); } 100% { left: -15%; transform: scaleX(1); } }
+.fish-1 { top: 35%; animation-duration: 22s; }
+.fish-2 { top: 55%; animation-duration: 28s; animation-delay: 5s; transform: scale(0.7); }
+.fish-3 { top: 20%; animation-duration: 26s; animation-delay: 10s; transform: scale(0.5); }
+.giant-mush { position: absolute; bottom: 8%; image-rendering: pixelated; }
+.gm-1 { left: 4%; width: 140px; height: 180px; }
+.gm-2 { right: 5%; width: 110px; height: 140px; }
+.gm-3 { left: 20%; width: 70px; height: 90px; opacity: 0.9; }
+.gm-4 { right: 22%; width: 60px; height: 80px; opacity: 0.85; }
+.spore { position: absolute; width: 8px; height: 8px; background: #E8C8FF; border-radius: 50%; box-shadow: 0 0 8px #C084FC; animation: sporeFloat linear infinite; }
+@keyframes sporeFloat { 0% { transform: translate(0, 0) scale(0.5); opacity: 0; } 15% { opacity: 1; } 50% { transform: translate(30px, -50vh) scale(1.1); opacity: 0.9; } 85% { opacity: 0.6; } 100% { transform: translate(-20px, -110vh) scale(0.6); opacity: 0; } }
+.spore:nth-child(1) { left: 12%; bottom: 10%; animation-duration: 12s; }
+.spore:nth-child(2) { left: 32%; bottom: 20%; animation-duration: 14s; animation-delay: 2s; }
+.spore:nth-child(3) { left: 52%; bottom: 5%; animation-duration: 11s; animation-delay: 1s; }
+.spore:nth-child(4) { left: 72%; bottom: 15%; animation-duration: 15s; animation-delay: 3.5s; }
+.spore:nth-child(5) { left: 88%; bottom: 8%; animation-duration: 13s; animation-delay: 5s; }
+.spore:nth-child(6) { left: 42%; bottom: 25%; animation-duration: 16s; animation-delay: 6.5s; width: 6px; height: 6px; }
+
+/* ================= MAIN PANEL ================= */
+.gui-panel {
+  width: 100%; max-width: 600px; max-height: 98vh;
+  background: var(--panel); border: 2px solid #000;
+  box-shadow: inset -3px -3px 0 var(--panel-dd), inset 3px 3px 0 var(--panel-l), inset -6px -6px 0 var(--panel-d), inset 6px 6px 0 var(--panel-l), 0 12px 32px rgba(0,0,0,0.75);
+  padding: 14px 16px 10px;
+  display: flex; flex-direction: column;
+  position: relative; overflow: hidden;
+  z-index: 10; image-rendering: pixelated;
+  transition: background 0.4s, box-shadow 0.4s;
+}
+.top-bar { display: flex; flex-direction: column; gap: 6px; margin-bottom: 6px; flex-shrink: 0; padding: 2px 0 8px; border-bottom: 2px solid var(--panel-d); box-shadow: 0 2px 0 var(--panel-l); }
+.top-row-1 { display: flex; gap: 6px; align-items: center; }
+.top-row-2 { display: flex; gap: 4px; align-items: center; overflow-x: auto; padding: 2px 0; }
+.top-row-2::-webkit-scrollbar { height: 4px; }
+.top-row-2::-webkit-scrollbar-thumb { background: var(--panel-d); }
+.name-input { flex: 1; font-family: 'Minecraft', 'MinecraftTen', 'Chakra Petch', monospace; font-size: 13px; padding: 7px 10px; background: #2B2B2B; border: 2px solid #000; box-shadow: inset 2px 2px 0 #131313, inset -2px -2px 0 #4A4A4A; color: #FFFFFF; text-shadow: 1px 1px 0 #000; outline: none; min-width: 0; -webkit-font-smoothing: none; }
+.name-input::placeholder { color: #666; }
+.icon-btn { font-family: 'Minecraft', 'MinecraftTen', monospace; font-size: 13px; width: 34px; height: 34px; display: flex; align-items: center; justify-content: center; background: var(--panel-d); border: 2px solid #000; box-shadow: inset -2px -2px 0 var(--panel-dd), inset 2px 2px 0 var(--panel-l); color: #FFFFFF; text-shadow: 1px 1px 0 #2A2A2A; cursor: pointer; padding: 0; flex-shrink: 0; user-select: none; outline: none; position: relative; -webkit-font-smoothing: none; }
+.icon-btn:hover { filter: brightness(1.15); color: #FFFFA0; }
+.icon-btn:active { box-shadow: inset 2px 2px 0 var(--panel-dd), inset -2px -2px 0 var(--panel-l); }
+.icon-btn.active { background: var(--accent-m); color: #FFFFFF; box-shadow: inset -2px -2px 0 var(--accent-dd), inset 2px 2px 0 var(--accent-l); }
+.icon-btn.muted { background: #4A4A4A; color: #8B8B8B; }
+.theme-btn { width: 34px; height: 30px; font-size: 16px; padding: 0; }
+.music-wrap { position: relative; flex-shrink: 0; }
+.music-btn-playing { animation: musicPulse 1.5s ease-in-out infinite; }
+@keyframes musicPulse { 0%, 100% { box-shadow: inset -2px -2px 0 var(--accent-dd), inset 2px 2px 0 var(--accent-l), 0 0 0 0 rgba(255,255,255,0.4); } 50% { box-shadow: inset -2px -2px 0 var(--accent-dd), inset 2px 2px 0 var(--accent-l), 0 0 0 6px rgba(255,255,255,0); } }
+.music-popover { position: absolute; top: calc(100% + 8px); right: 0; width: 240px; background: var(--panel); border: 2px solid #000; box-shadow: inset -2px -2px 0 var(--panel-dd), inset 2px 2px 0 var(--panel-l), inset -4px -4px 0 var(--panel-d), inset 4px 4px 0 var(--panel-l), 0 8px 20px rgba(0,0,0,0.5); padding: 10px; z-index: 100; opacity: 0; pointer-events: none; transform: translateY(-6px); transition: opacity 0.2s, transform 0.2s; }
+.music-popover.open { opacity: 1; pointer-events: auto; transform: translateY(0); }
+.mp-title { font-family: 'Minecraft', 'MinecraftTen', monospace; font-size: 11px; color: var(--text); text-shadow: 1px 1px 0 var(--panel-l); letter-spacing: 1px; margin-bottom: 8px; -webkit-font-smoothing: none; }
+.mp-now { font-family: 'Chakra Petch', sans-serif; font-size: 11px; font-weight: 700; color: var(--accent-d); background: rgba(0,0,0,0.1); padding: 4px 8px; border: 2px solid var(--panel-d); margin-bottom: 8px; display: flex; justify-content: space-between; align-items: center; gap: 6px; }
+.mp-note { color: var(--accent); font-family: 'Minecraft', monospace; animation: noteBob 1.2s ease-in-out infinite; display: inline-block; }
+@keyframes noteBob { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-2px); } }
+.mp-slider-row { display: flex; align-items: center; gap: 8px; margin-bottom: 6px; }
+.mp-label { font-family: 'Minecraft', 'MinecraftTen', monospace; font-size: 10px; color: var(--text); width: 30px; flex-shrink: 0; -webkit-font-smoothing: none; }
+.mp-slider { flex: 1; -webkit-appearance: none; appearance: none; height: 8px; background: #2B2B2B; border: 2px solid #000; box-shadow: inset 1px 1px 0 #131313, inset -1px -1px 0 #4A4A4A; outline: none; cursor: pointer; border-radius: 0; }
+.mp-slider::-webkit-slider-thumb { -webkit-appearance: none; appearance: none; width: 14px; height: 20px; background: var(--panel-d); border: 2px solid #000; box-shadow: inset -2px -2px 0 var(--panel-dd), inset 2px 2px 0 var(--panel-l); cursor: pointer; }
+.mp-slider::-moz-range-thumb { width: 14px; height: 20px; background: var(--panel-d); border: 2px solid #000; box-shadow: inset -2px -2px 0 var(--panel-dd), inset 2px 2px 0 var(--panel-l); cursor: pointer; border-radius: 0; }
+.mp-value { font-family: 'Minecraft', 'MinecraftTen', monospace; font-size: 10px; color: var(--text); width: 34px; text-align: right; -webkit-font-smoothing: none; }
+
+.title-area { text-align: center; position: relative; padding: 2px 0 6px; flex-shrink: 0; }
+.mc-title { font-family: 'Minecraft', 'MinecraftTen', 'Chakra Petch', monospace; font-weight: 400; font-size: 30px; color: var(--text); text-shadow: 3px 3px 0 var(--panel-l); letter-spacing: 1px; line-height: 1; margin-bottom: 4px; -webkit-font-smoothing: none; }
+.mc-title .green { color: #2E7D14; }
+.mc-title .yellow { color: #B8860B; }
+.splash { position: absolute; top: -2px; right: 6px; font-family: 'Minecraft', 'MinecraftTen', 'Chakra Petch', monospace; font-size: 14px; color: var(--splash); text-shadow: 2px 2px 0 var(--splash-sh); transform: rotate(-18deg); animation: splashPulse 0.6s ease-in-out infinite alternate; pointer-events: none; white-space: nowrap; -webkit-font-smoothing: none; }
+@keyframes splashPulse { from { transform: rotate(-18deg) scale(1); } to { transform: rotate(-18deg) scale(1.06); } }
+.mc-subtitle { font-family: 'Chakra Petch', sans-serif; font-weight: 600; font-size: 12px; color: var(--text); text-shadow: 1px 1px 0 var(--panel-l); }
+
+.slot-block { margin-bottom: 8px; flex-shrink: 0; }
+.slot-label { display: flex; align-items: center; gap: 7px; font-family: 'Minecraft', 'MinecraftTen', 'Chakra Petch', monospace; font-size: 13px; color: var(--text); text-shadow: 1px 1px 0 var(--panel-l); letter-spacing: 1px; margin-bottom: 3px; padding-left: 2px; -webkit-font-smoothing: none; }
+.slot-label .icon { width: 16px; height: 16px; flex-shrink: 0; border: 2px solid #000; image-rendering: pixelated; }
+.icon-gold { background: #FFCC00; box-shadow: inset 3px 3px 0 #FFF7A0, inset -3px -3px 0 #8B6800; }
+.icon-diamond { background: #4DD0E1; box-shadow: inset 3px 3px 0 #B3F0F5, inset -3px -3px 0 #1E6B73; }
+.slot-counter, .slot-difficulty { margin-left: auto; font-family: 'Minecraft', 'MinecraftTen', monospace; font-size: 11px; text-shadow: 1px 1px 0 var(--panel-l); -webkit-font-smoothing: none; }
+.slot-difficulty { padding: 1px 6px; border: 2px solid #000; background: #2B2B2B; color: #FFAA00; text-shadow: 1px 1px 0 #000; margin-left: 6px; font-size: 10px; }
+.slot-difficulty.easy { color: #55FF55; }
+.slot-difficulty.medium { color: #FFFF55; }
+.slot-difficulty.hard { color: #FF8888; }
+.slot-difficulty.expert { color: #FF55FF; }
+
+.slot-display { background: #2B2B2B; border: 2px solid #000; box-shadow: inset 2px 2px 0 #131313, inset -2px -2px 0 #4A4A4A, inset 4px 4px 0 #1F1F1F, inset -4px -4px 0 #383838; padding: 12px 12px; min-height: 52px; display: flex; align-items: center; justify-content: center; text-align: center; position: relative; }
+.seed-display { font-family: 'Minecraft', 'MinecraftTen', monospace; font-weight: 400; font-size: 24px; color: #FFCC00; text-shadow: 3px 3px 0 #5A3D00; word-break: break-all; letter-spacing: 2px; line-height: 1.2; -webkit-font-smoothing: none; flex: 1; }
+.seed-display.empty { color: #666; font-size: 13px; text-shadow: 2px 2px 0 #131313; letter-spacing: 1px; }
+.star-btn { position: absolute; right: 6px; top: 50%; transform: translateY(-50%); font-size: 18px; width: 32px; height: 32px; background: transparent; border: none; cursor: pointer; color: #666; padding: 0; user-select: none; outline: none; transition: transform 0.15s; font-family: 'Minecraft', monospace; }
+.star-btn:hover { color: #FFCC00; transform: translateY(-50%) scale(1.15); }
+.star-btn.active { color: #FFCC00; text-shadow: 2px 2px 0 #8B6800; }
+.challenge-display { font-family: 'Chakra Petch', 'Minecraft', sans-serif; font-weight: 700; font-size: 16px; color: #FFFFFF; text-shadow: 2px 2px 0 #000; line-height: 1.4; min-height: 60px; padding: 10px 8px; display: flex; align-items: center; justify-content: center; }
+.challenge-display.empty { color: #666; font-weight: 600; font-size: 13px; text-shadow: 2px 2px 0 #131313; }
+
+.button-area { display: flex; flex-direction: column; gap: 6px; margin-top: 8px; flex-shrink: 0; }
+.mc-btn { font-family: 'Minecraft', 'MinecraftTen', 'Chakra Petch', monospace; font-size: 15px; font-weight: 400; letter-spacing: 1px; color: #FFFFFF; text-shadow: 2px 2px 0 #2A2A2A; background: var(--panel-d); border: 2px solid #000; box-shadow: inset -2px -2px 0 var(--panel-dd), inset 2px 2px 0 var(--panel-l), inset -4px -4px 0 var(--panel-dd), inset 4px 4px 0 var(--panel-l); padding: 15px 12px; width: 100%; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; user-select: none; outline: none; -webkit-font-smoothing: none; }
+.mc-btn:hover { background: #6C7DA0; color: #FFFFA0; text-shadow: 2px 2px 0 #2A3560; }
+.mc-btn:active { box-shadow: inset 2px 2px 0 var(--panel-dd), inset -2px -2px 0 var(--panel-l), inset 4px 4px 0 var(--panel-dd), inset -4px -4px 0 var(--panel-l); padding-top: 17px; padding-bottom: 13px; }
+.mc-btn:disabled { opacity: 0.55; cursor: not-allowed; filter: saturate(0.4); }
+.mc-btn.primary { background: var(--accent); box-shadow: inset -2px -2px 0 var(--accent-d), inset 2px 2px 0 var(--accent-l), inset -4px -4px 0 var(--accent-dd), inset 4px 4px 0 var(--accent-m); font-size: 17px; padding: 17px 12px; color: #FFFFFF; text-shadow: 2px 2px 0 #000; }
+.mc-btn.primary:hover { background: var(--accent-m); color: #FFFFA0; }
+.mc-btn.done { background: #B8860B; box-shadow: inset -2px -2px 0 #6B4F00, inset 2px 2px 0 #FFCC00, inset -4px -4px 0 #8A6800, inset 4px 4px 0 #E0A800; color: #FFFFFF; text-shadow: 2px 2px 0 #4A3500; font-size: 14px; padding: 13px 12px; }
+.mc-btn.done:hover { background: #D4A017; color: #FFFFA0; }
+.mc-btn.enchant { background: #6B21A8; box-shadow: inset -2px -2px 0 #3B0764, inset 2px 2px 0 #A855F7, inset -4px -4px 0 #4C1D95, inset 4px 4px 0 #9333EA; color: #FFFFFF; text-shadow: 2px 2px 0 #2E1065; font-size: 13px; padding: 13px 12px; }
+.mc-btn.enchant:hover { background: #7E22CE; color: #E9D5FF; }
+/* Mini Game Buttons */
+.mc-btn.minigame { background: #A83232; box-shadow: inset -2px -2px 0 #6B1E1E, inset 2px 2px 0 #D44A4A, inset -4px -4px 0 #8B2020, inset 4px 4px 0 #C43C3C; color: #FFFFFF; text-shadow: 2px 2px 0 #3A0808; font-size: 13px; padding: 13px 12px; }
+.mc-btn.minigame:hover { background: #C43C3C; color: #FFFFA0; }
+.mc-btn.chess { background: #1A5A8A; box-shadow: inset -2px -2px 0 #0A2A48, inset 2px 2px 0 #3A8AC8, inset -4px -4px 0 #104068, inset 4px 4px 0 #2A7AA8; color: #FFFFFF; text-shadow: 2px 2px 0 #0A1A28; font-size: 13px; padding: 13px 12px; }
+.mc-btn.chess:hover { background: #2A7AA8; color: #FFFFA0; }
+.mc-btn.copied { background: #2D6318 !important; color: #FFFFA0 !important; }
+.btn-row { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; }
+.btn-row .mc-btn { padding: 12px 8px; font-size: 13px; }
+
+.score-bar { display: flex; justify-content: space-between; align-items: center; background: #2B2B2B; border: 2px solid #000; box-shadow: inset 2px 2px 0 #131313, inset -2px -2px 0 #4A4A4A; padding: 6px 10px; margin-top: 8px; flex-shrink: 0; font-family: 'Minecraft', 'MinecraftTen', 'Chakra Petch', monospace; font-size: 12px; -webkit-font-smoothing: none; }
+.score-bar .sb-label { color: #AAAAAA; text-shadow: 1px 1px 0 #000; }
+.score-bar .sb-value { color: #FFCC00; text-shadow: 2px 2px 0 #5A3D00; font-size: 14px; letter-spacing: 1px; }
+
+.chat-log { margin-top: 8px; padding: 6px 0 4px; border-top: 2px dashed var(--panel-d); max-height: 90px; overflow-y: auto; flex-shrink: 0; scrollbar-width: thin; scrollbar-color: var(--panel-d) var(--panel-l); }
+.chat-log::-webkit-scrollbar { width: 8px; }
+.chat-log::-webkit-scrollbar-track { background: var(--panel-l); border: 1px solid var(--panel-d); }
+.chat-log::-webkit-scrollbar-thumb { background: var(--panel-d); border: 1px solid #555; }
+.chat-line { background: rgba(0, 0, 0, 0.55); padding: 3px 8px; margin-bottom: 2px; font-family: 'Chakra Petch', sans-serif; font-size: 12px; font-weight: 600; color: #FFFFFF; text-shadow: 1px 1px 0 #000; line-height: 1.35; display: flex; gap: 6px; align-items: baseline; animation: chatIn 0.2s ease; }
+@keyframes chatIn { from { opacity: 0; transform: translateX(-8px); } to { opacity: 1; transform: translateX(0); } }
+.chat-line .chat-prefix { color: #55FF55; font-family: 'Minecraft', 'MinecraftTen', monospace; font-size: 11px; flex-shrink: 0; -webkit-font-smoothing: none; }
+.chat-line .chat-seed { color: #FFCC00; font-family: 'Minecraft', 'MinecraftTen', monospace; font-size: 12px; flex-shrink: 0; -webkit-font-smoothing: none; }
+.chat-line .chat-msg { color: #DDDDDD; flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.chat-line.success .chat-prefix { color: #FFAA00; }
+.chat-line.success .chat-msg { color: #FFFF55; }
+
+.xp-bar { position: relative; height: 10px; background: #1A1A1A; border: 2px solid #000; margin-top: 8px; flex-shrink: 0; box-shadow: inset 1px 1px 0 #000, inset -1px -1px 0 #444; }
+.xp-fill { height: 100%; width: 65%; background: linear-gradient(180deg, #80FF20 0%, #50C000 100%); box-shadow: inset 0 2px 0 rgba(255,255,255,0.4), inset 0 -2px 0 rgba(0,0,0,0.4); animation: xpShimmer 3s ease-in-out infinite; }
+@keyframes xpShimmer { 0%,100% { width: 65%; } 50% { width: 72%; } }
+.xp-level { position: absolute; top: -14px; left: 50%; transform: translateX(-50%); font-family: 'Minecraft', 'MinecraftTen', monospace; font-size: 11px; color: #80FF20; text-shadow: 2px 2px 0 #000; letter-spacing: 1px; -webkit-font-smoothing: none; white-space: nowrap; }
+
+/* ================= MODALS ================= */
+.lib-modal { position: fixed; inset: 0; background: rgba(0, 0, 0, 0.85); display: flex; align-items: center; justify-content: center; padding: 12px; opacity: 0; pointer-events: none; transition: opacity 0.2s ease; z-index: 500; }
+.lib-modal.open { opacity: 1; pointer-events: auto; }
+.lib-panel { width: 100%; max-width: 820px; max-height: 94vh; background: var(--panel); border: 2px solid #000; box-shadow: inset -3px -3px 0 var(--panel-dd), inset 3px 3px 0 var(--panel-l), inset -6px -6px 0 var(--panel-d), inset 6px 6px 0 var(--panel-l), 0 20px 60px rgba(0,0,0,0.9); padding: 14px 14px 10px; display: flex; flex-direction: column; transform: scale(0.94); transition: transform 0.22s cubic-bezier(0.34, 1.56, 0.64, 1), background 0.4s; }
+.lib-modal.open .lib-panel { transform: scale(1); }
+.lib-header { display: flex; align-items: center; justify-content: space-between; padding: 0 2px 10px; margin-bottom: 10px; border-bottom: 2px solid var(--panel-d); box-shadow: 0 2px 0 var(--panel-l); flex-shrink: 0; gap: 8px; }
+.lib-header h2 { font-family: 'Minecraft', 'MinecraftTen', 'Chakra Petch', monospace; font-size: 18px; font-weight: 400; color: var(--text); text-shadow: 2px 2px 0 var(--panel-l); letter-spacing: 1px; -webkit-font-smoothing: none; }
+.lib-header h2 .purple { color: #6B21A8; }
+.lib-header h2 .gold { color: #B8860B; }
+.lib-header h2 .red { color: #A83232; }
+.lib-header h2 .blue { color: #1A5A8A; }
+.close-btn { font-family: 'Minecraft', 'MinecraftTen', monospace; font-size: 15px; width: 36px; height: 36px; color: #FFFFFF; text-shadow: 2px 2px 0 #4A0000; background: #8B2020; border: 2px solid #000; box-shadow: inset -2px -2px 0 #4A0000, inset 2px 2px 0 #D44A4A; cursor: pointer; flex-shrink: 0; display: flex; align-items: center; justify-content: center; padding: 0; outline: none; -webkit-font-smoothing: none; }
+.close-btn:hover { background: #B02020; color: #FFFFA0; }
+.lib-body { flex: 1; overflow-y: auto; padding: 4px; margin: 0 -4px; scrollbar-width: thin; scrollbar-color: var(--panel-d) var(--panel-l); }
+.lib-body::-webkit-scrollbar { width: 12px; }
+.lib-body::-webkit-scrollbar-track { background: var(--panel-d); border: 2px solid #373737; }
+.lib-body::-webkit-scrollbar-thumb { background: var(--accent); border: 2px solid #373737; }
+
+/* ================= XO GAME ================= */
+.xo-panel { max-width: 460px; }
+.xo-mode-row { display: flex; gap: 6px; margin-bottom: 12px; flex-wrap: wrap; }
+.xo-mode { font-family: 'Minecraft', 'MinecraftTen', 'Chakra Petch', monospace; font-size: 11px; padding: 8px 10px; background: var(--panel-d); border: 2px solid #000; box-shadow: inset -2px -2px 0 var(--panel-dd), inset 2px 2px 0 var(--panel-l); color: var(--text); cursor: pointer; flex: 1; min-width: 90px; text-align: center; outline: none; -webkit-font-smoothing: none; }
+.xo-mode:hover { filter: brightness(1.1); }
+.xo-mode.active { background: var(--accent-m); color: #FFFFFF; text-shadow: 1px 1px 0 var(--accent-dd); box-shadow: inset -2px -2px 0 var(--accent-dd), inset 2px 2px 0 var(--accent-l); }
+
+.xo-status { font-family: 'Minecraft', 'MinecraftTen', 'Chakra Petch', monospace; font-size: 14px; color: var(--text); text-shadow: 1px 1px 0 var(--panel-l); text-align: center; padding: 10px; background: #2B2B2B; border: 2px solid #000; box-shadow: inset 2px 2px 0 #131313, inset -2px -2px 0 #4A4A4A; color: #FFCC00; text-shadow: 2px 2px 0 #5A3D00; margin-bottom: 12px; -webkit-font-smoothing: none; min-height: 44px; display: flex; align-items: center; justify-content: center; }
+
+.xo-board { display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; background: #5A3A1F; padding: 8px; border: 3px solid #000; box-shadow: inset -3px -3px 0 #3A2010, inset 3px 3px 0 #7A5A3A, inset -6px -6px 0 #4A2A18, inset 6px 6px 0 #6A4A2A; margin-bottom: 12px; }
+.xo-cell { aspect-ratio: 1 / 1; background: #7A5A3A; border: 2px solid #000; box-shadow: inset 2px 2px 0 #9A7A5A, inset -2px -2px 0 #4A2A18; cursor: pointer; display: flex; align-items: center; justify-content: center; position: relative; transition: transform 0.08s; image-rendering: pixelated; }
+.xo-cell:hover:not(.marked) { background: #8A6A4A; transform: scale(1.03); }
+.xo-cell:active:not(.marked) { transform: scale(0.97); }
+.xo-cell.marked { cursor: default; }
+.xo-cell.win-highlight { animation: winGlow 0.6s ease-in-out infinite alternate; }
+@keyframes winGlow { from { box-shadow: inset 2px 2px 0 #FFE97F, inset -2px -2px 0 #B8860B, 0 0 12px 4px rgba(255,220,80,0.7); } to { box-shadow: inset 2px 2px 0 #FFE97F, inset -2px -2px 0 #B8860B, 0 0 20px 8px rgba(255,220,80,0.9); } }
+
+/* Grass block (X) */
+.grass-mark { width: 78%; height: 78%; background: #5B9B4A; border: 2px solid #000; box-shadow: inset 3px 3px 0 #7BB860, inset -3px -3px 0 #2A5520, inset 0 4px 0 #7BB860; position: relative; image-rendering: pixelated; }
+.grass-mark::before { content: ''; position: absolute; top: 24%; left: 0; right: 0; bottom: 0; background: #7A5A3A; box-shadow: inset 2px 2px 0 #9A7A5A, inset -2px -2px 0 #4A2A18; }
+.grass-mark::after { content: ''; position: absolute; top: 22%; left: 4%; right: 4%; height: 3px; background: #A8D890; opacity: 0.7; }
+
+/* Stone block (O) */
+.stone-mark { width: 78%; height: 78%; background: #8B8B8B; border: 2px solid #000; box-shadow: inset 3px 3px 0 #B0B0B0, inset -3px -3px 0 #555; position: relative; image-rendering: pixelated; }
+.stone-mark::before { content: ''; position: absolute; top: 20%; left: 20%; width: 25%; height: 25%; background: #B0B0B0; }
+.stone-mark::after { content: ''; position: absolute; top: 45%; left: 55%; width: 30%; height: 30%; background: #6A6A6A; }
+
+.xo-actions { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; margin-top: 4px; }
+
+/* ================= CHESS ================= */
+.chess-panel { max-width: 720px; }
+.chess-toolbar { display: flex; gap: 6px; margin-bottom: 10px; flex-wrap: wrap; align-items: center; }
+.chess-mode { font-family: 'Minecraft', 'MinecraftTen', 'Chakra Petch', monospace; font-size: 11px; padding: 8px 10px; background: var(--panel-d); border: 2px solid #000; box-shadow: inset -2px -2px 0 var(--panel-dd), inset 2px 2px 0 var(--panel-l); color: var(--text); cursor: pointer; outline: none; -webkit-font-smoothing: none; }
+.chess-mode:hover { filter: brightness(1.1); }
+.chess-mode.active { background: var(--accent-m); color: #FFFFFF; text-shadow: 1px 1px 0 var(--accent-dd); box-shadow: inset -2px -2px 0 var(--accent-dd), inset 2px 2px 0 var(--accent-l); }
+.chess-status { font-family: 'Minecraft', 'MinecraftTen', 'Chakra Petch', monospace; font-size: 13px; color: #FFCC00; text-shadow: 2px 2px 0 #5A3D00; padding: 8px 12px; background: #2B2B2B; border: 2px solid #000; box-shadow: inset 2px 2px 0 #131313, inset -2px -2px 0 #4A4A4A; margin-bottom: 10px; -webkit-font-smoothing: none; min-height: 36px; display: flex; align-items: center; justify-content: center; flex: 1; }
+
+.chess-main { display: flex; gap: 10px; flex-wrap: wrap; justify-content: center; }
+.chess-board-wrap { position: relative; }
+.chess-board { display: grid; grid-template-columns: repeat(8, 1fr); grid-template-rows: repeat(8, 1fr); width: 400px; height: 400px; max-width: 78vw; max-height: 78vw; border: 3px solid #000; box-shadow: inset -3px -3px 0 #4A2A18, inset 3px 3px 0 #9A7A5A, 0 8px 20px rgba(0,0,0,0.5); image-rendering: pixelated; }
+.chess-cell { display: flex; align-items: center; justify-content: center; font-size: 28px; cursor: pointer; position: relative; user-select: none; transition: background 0.1s; image-rendering: pixelated; line-height: 1; }
+.chess-cell.light { background: #EBE0C8; }
+.chess-cell.dark { background: #7A5A3A; }
+.chess-cell.light:hover, .chess-cell.dark:hover { filter: brightness(1.1); }
+.chess-cell.selected { box-shadow: inset 0 0 0 3px #FFCC00, inset 0 0 12px 4px rgba(255,204,0,0.5); }
+.chess-cell.legal-move::after { content: ''; position: absolute; width: 30%; height: 30%; border-radius: 50%; background: rgba(60, 133, 39, 0.7); border: 2px solid rgba(0,80,0,0.9); box-shadow: 0 0 8px rgba(80,200,60,0.8); }
+.chess-cell.legal-capture::after { content: ''; position: absolute; inset: 4px; border-radius: 50%; border: 4px solid rgba(200,50,50,0.8); background: transparent; box-shadow: 0 0 12px rgba(255,80,80,0.6); }
+.chess-cell.last-move { background: rgba(255,204,0,0.35) !important; }
+.chess-cell.check-king { animation: checkPulse 0.8s ease-in-out infinite alternate; }
+@keyframes checkPulse { from { box-shadow: inset 0 0 0 3px #FF4040, inset 0 0 15px 6px rgba(255,60,60,0.6); } to { box-shadow: inset 0 0 0 3px #FF8080, inset 0 0 25px 10px rgba(255,60,60,0.9); } }
+
+.piece { width: 90%; height: 90%; display: flex; align-items: center; justify-content: center; font-size: 30px; position: relative; image-rendering: pixelated; filter: drop-shadow(1px 2px 0 rgba(0,0,0,0.4)); }
+.piece.white-piece { filter: drop-shadow(1px 2px 0 rgba(0,0,0,0.5)) drop-shadow(0 0 3px rgba(255,255,255,0.6)); }
+.piece.black-piece { filter: drop-shadow(1px 2px 0 rgba(0,0,0,0.5)) drop-shadow(0 0 3px rgba(120,0,120,0.5)); }
+
+/* Captured trays */
+.chess-side { display: flex; flex-direction: column; gap: 8px; min-width: 130px; flex: 1; max-width: 200px; }
+.captured-tray { background: #2B2B2B; border: 2px solid #000; box-shadow: inset 2px 2px 0 #131313, inset -2px -2px 0 #4A4A4A; padding: 8px; min-height: 60px; }
+.captured-title { font-family: 'Minecraft', 'MinecraftTen', monospace; font-size: 10px; color: #AAAAAA; text-shadow: 1px 1px 0 #000; margin-bottom: 6px; letter-spacing: 1px; -webkit-font-smoothing: none; }
+.captured-list { display: flex; flex-wrap: wrap; gap: 2px; font-size: 18px; min-height: 22px; }
+
+/* Legend */
+.chess-legend { margin-top: 12px; padding-top: 10px; border-top: 2px dashed var(--panel-d); }
+.chess-legend-title { font-family: 'Minecraft', 'MinecraftTen', monospace; font-size: 11px; color: var(--text); text-shadow: 1px 1px 0 var(--panel-l); margin-bottom: 8px; letter-spacing: 1px; -webkit-font-smoothing: none; }
+.chess-legend-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 6px; }
+.legend-row { display: grid; grid-template-columns: 24px 1fr; gap: 6px; align-items: center; padding: 5px 8px; background: #2B2B2B; border: 2px solid #000; box-shadow: inset 2px 2px 0 #131313, inset -2px -2px 0 #4A4A4A; font-family: 'Chakra Petch', sans-serif; font-size: 11px; font-weight: 700; }
+.legend-icon { font-size: 18px; text-align: center; }
+.legend-name { color: #FFFFFF; text-shadow: 1px 1px 0 #000; }
+.legend-team-white { border-left: 4px solid #FFFFFF; }
+.legend-team-black { border-left: 4px solid #6B21A8; }
+.legend-name .team-label { font-size: 9px; color: #AAAAAA; display: block; }
+
+@media (max-width: 640px) {
+  .gui-panel { padding: 12px 12px 8px; max-width: 100%; }
+  .mc-title { font-size: 22px; }
+  .splash { font-size: 11px; top: -4px; right: 2px; }
+  .seed-display { font-size: 18px; padding: 8px 6px; }
+  .challenge-display { font-size: 14px; min-height: 54px; padding: 8px 6px; }
+  .mc-btn { font-size: 13px; padding: 13px 8px; }
+  .mc-btn.primary { font-size: 15px; padding: 15px 8px; }
+  .btn-row .mc-btn { font-size: 11px; padding: 10px 6px; }
+  .name-input { font-size: 12px; padding: 6px 8px; }
+  .icon-btn { width: 30px; height: 30px; font-size: 12px; }
+  .theme-btn { width: 30px; height: 28px; font-size: 14px; }
+  .music-popover { width: 200px; right: -40px; }
+  .sun-square { width: 40px; height: 40px; }
+  .cactus-1 { width: 40px; height: 90px; }
+  .cactus-2 { width: 30px; height: 70px; }
+  .cactus-3 { display: none; }
+  .spruce-1 { width: 70px; height: 110px; }
+  .spruce-2 { width: 55px; height: 90px; }
+  .spruce-3 { display: none; }
+  .gm-1 { width: 90px; height: 120px; }
+  .gm-2 { width: 70px; height: 90px; }
+  .gm-3, .gm-4 { display: none; }
+  .lib-panel { padding: 10px 8px; max-height: 96vh; }
+  .lib-header h2 { font-size: 14px; }
+  .lib-tabs { grid-template-columns: repeat(3, 1fr); }
+  .tab-btn { font-size: 10px; padding: 6px 4px; }
+  .lib-grid { grid-template-columns: repeat(3, 1fr); gap: 4px; }
+  .lib-slot { padding: 5px 3px; }
+  .lib-slot .sc-num { font-size: 8px; }
+  .lib-slot .sc-id { font-size: 11px; }
+  .lib-slot .sc-tag { font-size: 9px; }
+  .lib-slot .sc-tooltip { font-size: 10px; padding: 5px 8px; }
+  .chess-main { flex-direction: column; align-items: stretch; }
+  .chess-side { max-width: none; flex-direction: row; }
+  .chess-side .captured-tray { flex: 1; }
+  .chess-legend-grid { grid-template-columns: 1fr; }
+  .piece { font-size: 22px; }
+  .chess-cell { font-size: 22px; }
+}
+@media (max-height: 720px) {
+  .mc-title { font-size: 22px; }
+  .slot-display { min-height: 44px; padding: 8px 8px; }
+  .seed-display { font-size: 18px; }
+  .challenge-display { min-height: 48px; font-size: 13px; padding: 8px 6px; }
+  .mc-btn { padding: 11px 8px; font-size: 12px; }
+  .mc-btn.primary { padding: 13px 8px; font-size: 14px; }
+  .chat-log { max-height: 60px; }
+}
+</style>
+</head>
+<body data-theme="overworld">
+
+<div class="scene-decor">
+  <div class="decor decor-desert">
+    <div class="sun-square"></div>
+    <svg class="cactus-svg cactus-1" viewBox="0 0 30 70" preserveAspectRatio="none" shape-rendering="crispEdges"><rect x="11" y="2" width="8" height="68" fill="#3E7A2E"/><rect x="11" y="2" width="2" height="68" fill="#5B9B4A"/><rect x="17" y="2" width="2" height="68" fill="#2A5520"/><rect x="1" y="18" width="10" height="3" fill="#3E7A2E"/><rect x="1" y="18" width="3" height="22" fill="#3E7A2E"/><rect x="19" y="30" width="10" height="3" fill="#3E7A2E"/><rect x="26" y="30" width="3" height="22" fill="#3E7A2E"/></svg>
+    <svg class="cactus-svg cactus-2" viewBox="0 0 24 55" preserveAspectRatio="none" shape-rendering="crispEdges"><rect x="9" y="2" width="7" height="53" fill="#3E7A2E"/><rect x="9" y="2" width="2" height="53" fill="#5B9B4A"/><rect x="14" y="2" width="2" height="53" fill="#2A5520"/><rect x="14" y="22" width="9" height="3" fill="#3E7A2E"/><rect x="21" y="22" width="3" height="18" fill="#3E7A2E"/></svg>
+    <div class="dune d2"></div><div class="dune"></div>
+  </div>
+  <div class="decor decor-snow">
+    <svg class="spruce spruce-1" viewBox="0 0 50 80" preserveAspectRatio="none" shape-rendering="crispEdges"><rect x="22" y="70" width="6" height="10" fill="#3A2A1A"/><rect x="15" y="55" width="20" height="15" fill="#2A4A3A"/><rect x="15" y="55" width="20" height="2" fill="#E8F0F8"/><rect x="17" y="38" width="16" height="17" fill="#2A4A3A"/><rect x="17" y="38" width="16" height="2" fill="#E8F0F8"/><rect x="19" y="22" width="12" height="16" fill="#2A4A3A"/><rect x="19" y="22" width="12" height="2" fill="#E8F0F8"/><rect x="21" y="8" width="8" height="14" fill="#2A4A3A"/><rect x="21" y="8" width="8" height="2" fill="#E8F0F8"/><rect x="23" y="2" width="4" height="6" fill="#E8F0F8"/></svg>
+    <svg class="spruce spruce-2" viewBox="0 0 40 65" preserveAspectRatio="none" shape-rendering="crispEdges"><rect x="18" y="56" width="4" height="9" fill="#3A2A1A"/><rect x="12" y="44" width="16" height="12" fill="#2A4A3A"/><rect x="12" y="44" width="16" height="2" fill="#E8F0F8"/><rect x="14" y="30" width="12" height="14" fill="#2A4A3A"/><rect x="14" y="30" width="12" height="2" fill="#E8F0F8"/><rect x="16" y="16" width="8" height="14" fill="#2A4A3A"/><rect x="16" y="16" width="8" height="2" fill="#E8F0F8"/><rect x="18" y="6" width="4" height="10" fill="#2A4A3A"/><rect x="18" y="6" width="4" height="2" fill="#E8F0F8"/></svg>
+    <div class="snowflake"></div><div class="snowflake"></div><div class="snowflake"></div><div class="snowflake"></div><div class="snowflake"></div><div class="snowflake"></div><div class="snowflake"></div><div class="snowflake"></div>
+  </div>
+  <div class="decor decor-ocean">
+    <svg class="coral coral-1" viewBox="0 0 30 40" preserveAspectRatio="none" shape-rendering="crispEdges"><rect x="13" y="20" width="4" height="20" fill="#FF6A88"/><rect x="8" y="10" width="4" height="20" fill="#FF4A70"/><rect x="4" y="15" width="4" height="15" fill="#FF6A88"/><rect x="18" y="5" width="4" height="25" fill="#FF4A70"/><rect x="22" y="12" width="4" height="18" fill="#FF6A88"/></svg>
+    <svg class="coral coral-2" viewBox="0 0 30 40" preserveAspectRatio="none" shape-rendering="crispEdges"><rect x="13" y="15" width="4" height="25" fill="#C084FC"/><rect x="7" y="20" width="4" height="20" fill="#A855F7"/><rect x="19" y="10" width="4" height="30" fill="#A855F7"/></svg>
+    <div class="seaweed sw-1"></div><div class="seaweed sw-2"></div><div class="seaweed sw-3"></div><div class="seaweed sw-4"></div><div class="seaweed sw-5"></div>
+    <div class="fish fish-1"></div><div class="fish fish-2"></div><div class="fish fish-3"></div>
+    <div class="bubble"></div><div class="bubble"></div><div class="bubble"></div><div class="bubble"></div><div class="bubble"></div><div class="bubble"></div>
+  </div>
+  <div class="decor decor-mushroom">
+    <svg class="giant-mush gm-1" viewBox="0 0 70 90" preserveAspectRatio="none" shape-rendering="crispEdges"><rect x="28" y="30" width="14" height="60" fill="#E8D8C0"/><rect x="15" y="18" width="40" height="14" fill="#C42B1C"/><rect x="10" y="8" width="50" height="12" fill="#D4402F"/><rect x="15" y="4" width="40" height="6" fill="#C42B1C"/><rect x="20" y="20" width="5" height="5" fill="#FFFFFF"/><rect x="42" y="20" width="5" height="5" fill="#FFFFFF"/><rect x="30" y="10" width="6" height="6" fill="#FFFFFF"/></svg>
+    <svg class="giant-mush gm-2" viewBox="0 0 55 70" preserveAspectRatio="none" shape-rendering="crispEdges"><rect x="22" y="24" width="11" height="46" fill="#E8D8C0"/><rect x="12" y="14" width="31" height="12" fill="#C42B1C"/><rect x="8" y="6" width="39" height="10" fill="#D4402F"/><rect x="12" y="2" width="31" height="6" fill="#C42B1C"/><rect x="15" y="15" width="4" height="4" fill="#FFFFFF"/><rect x="33" y="15" width="4" height="4" fill="#FFFFFF"/></svg>
+    <div class="spore"></div><div class="spore"></div><div class="spore"></div><div class="spore"></div><div class="spore"></div><div class="spore"></div>
+  </div>
+</div>
+
+<div class="gui-panel" id="guiPanel">
+  <div class="top-bar">
+    <div class="top-row-1">
+      <input class="name-input" id="playerName" type="text" maxlength="16" placeholder="ชื่อผู้เล่น..." />
+      <button class="icon-btn" id="soundBtn" title="เสียง SFX">🔊</button>
+      <div class="music-wrap">
+        <button class="icon-btn" id="musicBtn" title="เพลง BGM">🎵</button>
+        <div class="music-popover" id="musicPopover">
+          <div class="mp-title">🎵 BACKGROUND MUSIC</div>
+          <div class="mp-now"><span id="mpNowTitle">Overworld Theme</span><span class="mp-note" id="mpNote">♪</span></div>
+          <div class="mp-slider-row"><span class="mp-label">VOL</span><input type="range" class="mp-slider" id="mpVolume" min="0" max="100" value="40" /><span class="mp-value" id="mpValue">40%</span></div>
+          <div class="mp-slider-row"><span class="mp-label">BPM</span><input type="range" class="mp-slider" id="mpTempo" min="50" max="150" value="100" /><span class="mp-value" id="mpTempoVal">100%</span></div>
+        </div>
+      </div>
+    </div>
+    <div class="top-row-2" id="themeRow">
+      <button class="icon-btn theme-btn" data-theme="overworld" title="Overworld">🌳</button>
+      <button class="icon-btn theme-btn" data-theme="nether" title="Nether">🔥</button>
+      <button class="icon-btn theme-btn" data-theme="end" title="End">🌌</button>
+      <button class="icon-btn theme-btn" data-theme="desert" title="Desert">🌵</button>
+      <button class="icon-btn theme-btn" data-theme="snow" title="Snow">❄️</button>
+      <button class="icon-btn theme-btn" data-theme="ocean" title="Ocean">🌊</button>
+      <button class="icon-btn theme-btn" data-theme="mushroom" title="Mushroom">🍄</button>
+    </div>
+  </div>
+
+  <div class="title-area">
+    <div class="mc-title"><span class="green">SEED</span> <span class="yellow">GAME</span></div>
+    <div class="splash" id="splashText">Minecraft!</div>
+    <div class="mc-subtitle">สุ่ม Seed แล้วไปสร้างโลกใหม่ แข่งกันทำโจทย์!</div>
+  </div>
+
+  <div class="slot-block">
+    <div class="slot-label"><div class="icon icon-gold"></div><span>SEED</span></div>
+    <div class="slot-display">
+      <div class="seed-display empty" id="seedValue">— กดปุ่ม ROLL —</div>
+      <button class="star-btn" id="starBtn" title="Favorite">★</button>
+    </div>
+  </div>
+
+  <div class="slot-block">
+    <div class="slot-label">
+      <div class="icon icon-diamond"></div>
+      <span>CHALLENGE</span>
+      <span class="slot-difficulty" id="difficultyBadge" style="display:none;">—</span>
+      <span class="slot-counter" id="counter">0 / 200</span>
+    </div>
+    <div class="slot-display">
+      <div class="challenge-display empty" id="challengeValue">— รอสุ่มโจทย์ —</div>
+    </div>
+  </div>
+
+  <div class="button-area">
+    <button class="mc-btn primary" id="rollBtn">▶ ROLL</button>
+    <div class="btn-row">
+      <button class="mc-btn" id="copyBtn">📋 COPY</button>
+      <button class="mc-btn" id="rerollBtn">↻ RE-ROLL</button>
+    </div>
+    <button class="mc-btn done" id="doneBtn" disabled>✔ CHALLENGE COMPLETE</button>
+    <div class="btn-row">
+      <button class="mc-btn enchant" id="libraryBtn">📖 LIBRARY</button>
+      <button class="mc-btn enchant" id="leaderboardBtn">🏆 RANKING</button>
+    </div>
+    <div class="btn-row">
+      <button class="mc-btn minigame" id="xoBtn">🎮 XO GAME</button>
+      <button class="mc-btn chess" id="chessBtn">♟️ CHESS</button>
+    </div>
+  </div>
+
+  <div class="score-bar">
+    <span class="sb-label">💰 คะแนนของคุณ</span>
+    <span class="sb-value" id="scoreValue">0</span>
+  </div>
+
+  <div class="chat-log" id="chatLog"></div>
+
+  <div class="xp-bar">
+    <div class="xp-level" id="xpLevel">Seed Game</div>
+    <div class="xp-fill"></div>
+  </div>
+</div>
+
+<!-- LIBRARY MODAL -->
+<div class="lib-modal" id="libModal">
+  <div class="lib-panel">
+    <div class="lib-header">
+      <h2>📖 SEED <span class="purple">LIBRARY</span></h2>
+      <button class="close-btn" id="closeLibBtn">✕</button>
+    </div>
+    <div class="lib-tabs" id="libTabs"></div>
+    <div class="lib-body"><div class="lib-grid" id="libGrid"></div></div>
+  </div>
+</div>
+
+<!-- LEADERBOARD MODAL -->
+<div class="lib-modal" id="lbModal">
+  <div class="lib-panel">
+    <div class="lib-header">
+      <h2>🏆 <span class="gold">LEADERBOARD</span></h2>
+      <button class="close-btn" id="closeLbBtn">✕</button>
+    </div>
+    <div class="lib-body"><div class="lb-list" id="lbList"></div></div>
+  </div>
+</div>
+
+<!-- ================= XO MODAL ================= -->
+<div class="lib-modal" id="xoModal">
+  <div class="lib-panel xo-panel">
+    <div class="lib-header">
+      <h2>🎮 <span class="red">XO</span> MINECRAFT</h2>
+      <button class="close-btn" id="closeXoBtn">✕</button>
+    </div>
+    <div class="lib-body">
+      <div class="xo-mode-row" id="xoModes">
+        <button class="xo-mode active" data-mode="easy">🤖 BOT ง่าย</button>
+        <button class="xo-mode" data-mode="hard">🤖 BOT เก่ง</button>
+        <button class="xo-mode" data-mode="friend">👥 2 ผู้เล่น</button>
+      </div>
+      <div class="xo-status" id="xoStatus">กดที่ช่องเพื่อเริ่มเล่น — คุณคือ 🟩 หญ้า</div>
+      <div class="xo-board" id="xoBoard"></div>
+      <div class="xo-actions">
+        <button class="mc-btn primary" id="xoReset">↻ NEW GAME</button>
+        <button class="mc-btn" id="xoScoreReset">🏆 RESET SCORE</button>
+      </div>
+      <div class="score-bar" style="margin-top:10px;">
+        <span class="sb-label">🏆 สกอร์</span>
+        <span class="sb-value" id="xoScore">🟩 0  —  🤖 0</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ================= CHESS MODAL ================= -->
+<div class="lib-modal" id="chessModal">
+  <div class="lib-panel chess-panel">
+    <div class="lib-header">
+      <h2>♟️ <span class="blue">CHESS</span> MINECRAFT</h2>
+      <button class="close-btn" id="closeChessBtn">✕</button>
+    </div>
+    <div class="lib-body">
+      <div class="chess-toolbar">
+        <button class="chess-mode active" id="chessModeBot">🤖 VS BOT</button>
+        <button class="chess-mode" id="chessModeFriend">👥 2 PLAYERS</button>
+        <div class="chess-status" id="chessStatus">ตาของ 🟢 Overworld (ขาว)</div>
+      </div>
+
+      <div class="chess-main">
+        <div class="chess-side">
+          <div class="captured-tray">
+            <div class="captured-title">☠️ ฝ่ายดำจับได้</div>
+            <div class="captured-list" id="capturedByBlack"></div>
+          </div>
+          <div class="captured-tray">
+            <div class="captured-title">⚔️ ฝ่ายขาวจับได้</div>
+            <div class="captured-list" id="capturedByWhite"></div>
+          </div>
+        </div>
+        <div class="chess-board-wrap">
+          <div class="chess-board" id="chessBoard"></div>
+        </div>
+        <div class="chess-side">
+          <div class="captured-tray">
+            <div class="captured-title">📊 STATUS</div>
+            <div style="font-family:'Chakra Petch',sans-serif;font-weight:700;font-size:11px;color:#DDD;text-shadow:1px 1px 0 #000;line-height:1.5;">
+              Turn: <span id="chessTurn" style="color:#FFCC00;">WHITE</span><br>
+              Move: <span id="chessMoveNum" style="color:#FFCC00;">1</span><br>
+              <span id="chessInCheck" style="color:#FF5555;"></span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-top:10px;">
+        <button class="mc-btn primary" id="chessReset">↻ NEW GAME</button>
+        <button class="mc-btn" id="chessUndo">↶ UNDO</button>
+      </div>
+
+      <div class="chess-legend">
+        <div class="chess-legend-title">◆ LEGEND — ตัวหมากรุกคือม็อบอะไร</div>
+        <div class="chess-legend-grid">
+          <div class="legend-row legend-team-white"><span class="legend-icon">👨</span><span class="legend-name">Steve<span class="team-label">King (ขาว) — คิง</span></span></div>
+          <div class="legend-row legend-team-white"><span class="legend-icon">💎</span><span class="legend-name">Diamond<span class="team-label">Queen (ขาว) — ควีน</span></span></div>
+          <div class="legend-row legend-team-white"><span class="legend-icon">🏰</span><span class="legend-name">Castle<span class="team-label">Rook (ขาว) — เรือ</span></span></div>
+          <div class="legend-row legend-team-white"><span class="legend-icon">🧙</span><span class="legend-name">Enchanter<span class="team-label">Bishop (ขาว) — บิชอป</span></span></div>
+          <div class="legend-row legend-team-white"><span class="legend-icon">🐴</span><span class="legend-name">Horse<span class="team-label">Knight (ขาว) — ม้า</span></span></div>
+          <div class="legend-row legend-team-white"><span class="legend-icon">🧑‍🌾</span><span class="legend-name">Villager<span class="team-label">Pawn (ขาว) — เบี้ย</span></span></div>
+          <div class="legend-row legend-team-black"><span class="legend-icon">🐉</span><span class="legend-name">Ender Dragon<span class="team-label">King (ดำ) — คิง</span></span></div>
+          <div class="legend-row legend-team-black"><span class="legend-icon">💀</span><span class="legend-name">Wither<span class="team-label">Queen (ดำ) — ควีน</span></span></div>
+          <div class="legend-row legend-team-black"><span class="legend-icon">🗿</span><span class="legend-name">Iron Golem<span class="team-label">Rook (ดำ) — เรือ</span></span></div>
+          <div class="legend-row legend-team-black"><span class="legend-icon">🧙‍♀️</span><span class="legend-name">Witch<span class="team-label">Bishop (ดำ) — บิชอป</span></span></div>
+          <div class="legend-row legend-team-black"><span class="legend-icon">🐷</span><span class="legend-name">Pig<span class="team-label">Knight (ดำ) — ม้า</span></span></div>
+          <div class="legend-row legend-team-black"><span class="legend-icon">🧟</span><span class="legend-name">Zombie<span class="team-label">Pawn (ดำ) — เบี้ย</span></span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"><span class="toast-icon">✔</span><span id="toastMsg">พร้อมแล้ว!</span></div>
+
+<script>
+/* ============ DATA ============ */
+const challenges = [
+  "หา Diamond 10 เม็ดภายใน 15 นาที","ขุดลงไปถึง Y=-50 โดยไม่ตาย","หา Emerald 5 เม็ด","ขุดเจอ Ancient Debris","หา Iron 64 เม็ด","ขุดหลุมใหญ่ขนาด 20x20","หา Gold 32 เม็ด","ขุด Redstone 64 ชิ้น","หา Lapis Lazuli 32 ชิ้น","ขุดลงไปจนถึง Bedrock","หา Coal 128 ชิ้น","สร้างเหมืองบันไดลงไป 100 บล็อก","หา Copper 64 ชิ้น","หา Amethyst Geode","ขุด Diamond ด้วยมือเปล่า","หา Deepslate 100 บล็อก","ขุด Obsidian 10 บล็อก","หา Quartz จาก Nether 32 ชิ้น","หา Netherite Ingot 1 ชิ้น","ขุดหิน 500 บล็อก","หา Raw Gold 32 ชิ้น","สร้าง TNT แล้วจุดระเบิด","หา Diamond Block 1 บล็อก","ขุดผ่าน Ravine","หา Moss Block 10 บล็อก",
+  "สร้างบ้านบนยอดเขา","สร้างฐานลอยฟ้าที่ Y=150+","สร้างปราสาทหิน","สร้างสะพานข้ามแม่น้ำ","สร้างฟาร์มสัตว์ 5 ชนิด","สร้างบ้านใต้น้ำ","สร้างหอคอยสูง 50 บล็อก","สร้างถนนเชื่อม 2 หมู่บ้าน","สร้างฟาร์มพืช 10 ชนิด","สร้าง Nether Portal สวยงาม","สร้างกำแพงรอบบ้าน","สร้างบ้านต้นไม้","สร้างสวนสาธารณะ","สร้างสะพานเชื่อมเกาะ","สร้างบ้านอิฐหิน","สร้างฟาร์ม Villager","สร้างร้านค้าในหมู่บ้าน","สร้างปิรามิด","สร้าง Statue ขนาดใหญ่","สร้างรางรถไฟยาว 100 บล็อก","สร้างบ้านหิมะ","สร้างทางลงเหมือง","สร้างประภาคาร","สร้างโรงงานหลอมเหล็ก","สร้างคอกม้า","สร้างลานประลอง","สร้างสวนสัตว์","สร้างท่าเทียบเรือ","สร้างค่ายพักแรม","สร้างหอสังเกตการณ์",
+  "หาหมู่บ้าน 3 แห่ง","หา Ocean Monument","หา Ancient City","หา Woodland Mansion","หา Desert Temple","หา Jungle Temple","หา Witch Hut","หา Igloo","หา Shipwreck","หา Buried Treasure","หา Ruined Portal","หา Pillager Outpost","หา Bastion Remnant","หา Nether Fortress","หา End City","หา Stronghold","หา Biome หายาก 3 อย่าง","หา Mushroom Island","หา Ice Spikes","หา Mesa Biome","หา Lush Cave","หา Dripstone Cave","หา Deep Dark Biome","หา Coral Reef","หา Flower Forest","หา Bamboo Jungle","หา Savanna Biome","หา Badlands Biome","หา Taiga Biome","เดินทาง 1000 บล็อก","ข้ามมหาสมุทร","ปีนภูเขาสูง","สำรวจถ้ำยาว","หาน้ำตก","หา Ravine",
+  "เอาชนะ Ender Dragon","ปราบ Wither","ปราบ Enderman 10 ตัว","ปราบ Zombie 20 ตัว","ปราบ Skeleton 20 ตัว","ปราบ Creeper 10 ตัว","ปราบ Spider 15 ตัว","ปราบ Witch 5 ตัว","ปราบ Pillager 10 ตัว","ปราบ Ravager","ปราบ Elder Guardian","ปราบ Warden","ปราบ Wither Skeleton 10 ตัว","ปราบ Blaze 10 ตัว","ปราบ Ghast 5 ตัว","ปราบ Piglin Brute","ปราบ Hoglin 5 ตัว","ปราบ Phantom 5 ตัว","ปราบ Drowned 10 ตัว","ปราบ Guardian 10 ตัว","ปราบ Shulker","ปราบ Vindicator","ปราบ Evoker","ปราบ Illusioner","ปราบ Silverfish 10 ตัว","ปราบ Endermite 5 ตัว","ปราบ Magma Cube 10 ตัว","ปราบ Slime 10 ตัว","ปราบ Zoglin","ปราบ Ender Dragon ด้วยธนู",
+  "จับปลาให้ได้ 20 ตัว","สร้างฟาร์มข้าวสาลี 100 ต้น","เลี้ยงวัว 10 ตัว","เลี้ยงหมู 10 ตัว","เลี้ยงแกะ 10 ตัว","เลี้ยงไก่ 10 ตัว","เลี้ยงม้า 5 ตัว","เลี้ยงแมว 5 ตัว","เลี้ยงสุนัข 5 ตัว","เลี้ยง Villager 5 คน","ปลูกต้นไม้ 50 ต้น","เก็บแอปเปิ้ล 32 ลูก","ทำขนมปัง 32 ชิ้น","ทำเค้ก 1 ชิ้น","ทำสตูว์กระต่าย","ทำ Pumpkin Pie","เก็บน้ำผึ้งจากรังผึ้ง","ทำฟาร์ม Mushroom","ปลูก Cactus 20 ต้น","ปลูก Bamboo 50 ต้น","ทำฟาร์ม Melon","ทำฟาร์ม Pumpkin","เก็บ Beetroot 32 หัว","เก็บ Carrot 64 หัว","เก็บ Potato 64 หัว","ทำฟาร์ม Sugar Cane","ทำฟาร์ม Cocoa Bean","ทำฟาร์ม Nether Wart","ผสมยา 5 ชนิด","ทำฟาร์ม XP",
+  "ไป Nether ภายใน 10 นาที","หา Netherite 1 ชิ้น","สร้าง Nether Portal","หา Bastion Remnant","หา Nether Fortress","ปราบ Blaze แล้วเอา Blaze Rod","หา Quartz 32 ชิ้น","ข้าม Lava Lake","หา Ancient Debris 4 ชิ้น","ไป End","ปราบ Ender Dragon","หา Elytra จาก End City","หา End Gateway","เก็บ Chorus Fruit 16 ชิ้น","หา End Ship","ปราบ Shulker 5 ตัว","เก็บ Dragon Egg","สร้าง Enderman Farm","กลับจาก End อย่างปลอดภัย","หา End Crystal","ทำ Ender Chest","ทำ Shulker Box","ใช้ Elytra บิน 500 บล็อก","ไป End City","เก็บ Purpur Block 64 ชิ้น",
+  "หา Diamond แรกภายใน 5 นาที","สร้างบ้านเสร็จภายใน 10 นาที","ไป Nether ภายใน 10 นาที","หาหมู่บ้านภายใน 5 นาที","ปราบ Ender Dragon ภายใน 30 นาที","หา Iron แรกภายใน 3 นาที","สร้าง Nether Portal ภายใน 15 นาที","ไป End ภายใน 25 นาที","หา Diamond 10 เม็ดภายใน 15 นาที","สร้างบ้านหลังแรกภายใน 5 นาที","เก็บไม้ 64 ชิ้นภายใน 3 นาที","หา Coal แรกภายใน 1 นาที","สร้าง Crafting Table ภายใน 1 นาที","สร้าง Furnace ภายใน 2 นาที","หา Sheep แรกภายใน 3 นาที","นอนหลับภายใน 10 นาที","สร้าง Iron Pickaxe ภายใน 10 นาที","หา Diamond Pickaxe ภายใน 20 นาที","สร้าง Enchanting Table ภายใน 30 นาที","หา Blaze Rod ภายใน 20 นาที","สร้าง Beacon ภายใน 1 ชั่วโมง","ไป End City ภายใน 45 นาที","หา Elytra ภายใน 1 ชั่วโมง","อยู่รอด 100 วันในเกม","เอาชนะทุก Boss ภายใน 2 ชั่วโมง"
+];
+
+const library = {
+  speed: { icon: "⚡", name: "SPEED RUN", seeds: [
+    [-482914706,"หมู่บ้าน+พอร์ทัลเนเธอร์ใกล้เกิด"],[39571824,"Ruined Portal โผล่ที่จุดเกิด"],[8654310215,"Stronghold อยู่ใต้หมู่บ้าน"],[-1037648295,"Ravine มีเพชรให้เห็น"],[1280510264,"หมู่บ้านมีบ้านช่างตีเหล็ก"],[7201458321,"Shipwreck มีแผนที่สมบัติ"],[-5028374916,"Buried Treasure ที่หาด"],[4581203947,"Desert Temple ติดจุดเกิด"],[1928374655,"หมู่บ้าน 2 แห่งติดกัน"],[8012937465,"Ocean Monument ใกล้ฝั่ง"],[-6029471038,"Nether Fortress ใกล้พอร์ทัล"],[3374829105,"Bastion Remnant โผล่ที่เกิด"],[9847612305,"Woodland Mansion ใกล้"],[-2193847561,"Igloo มีบันไดลับใต้ดิน"],[5019384756,"Pillager Outpost + หมู่บ้าน"],[6058173924,"Witch Hut ในหนองน้ำ"],[-8471920384,"End Portal ที่ Stronghold"],[1928374650,"Mineshaft เต็มไปด้วยหีบ"],[8374651920,"Lush Cave ที่จุดเกิด"],[-5049382017,"หมู่บ้าน + Pillager ใกล้"],[7201948375,"จุดสร้าง Raid Farm ชั้นดี"],[5620193847,"Ancient City ใกล้"],[-3049182736,"Trial Chamber ที่จุดเกิด"],[8102937461,"Desert + Jungle Temple ใกล้"],[6291803947,"Plains + Village + Ravine"]
+  ]},
+  loot: { icon: "💎", name: "EASY LOOT", seeds: [
+    [-1823746502,"Shipwreck 3 ลำเรียงติดกัน"],[3028194735,"Desert Temple หีบ 4 ใบ"],[-7192836450,"Jungle Temple เต็มกับดัก"],[5920183746,"Pillager Outpost หีบ 3 ใบ"],[-4029183746,"Mineshaft ยักษ์ + หีบ 15 ใบ"],[8103947562,"Woodland Mansion ใกล้"],[6291830475,"Ruined Portal + หีบ"],[-5283947106,"Bastion Remnant 3 แห่ง"],[1847293048,"Ocean Ruins เต็มหีบ"],[-6372819405,"Shipwreck + Ocean Ruins"],[9301827465,"Nether Fortress เต็มหีบ"],[-4029384716,"Stronghold + หีบสมบัติ"],[7281903485,"Desert Temple 2 แห่งติดกัน"],[-1928374650,"Buried Treasure 5 จุด"],[5019283746,"Igloo + บันไดลับ"],[-8410293847,"Trial Chamber ขนาดใหญ่"],[6182930475,"Ancient City ใกล้"],[2849103847,"Shipwreck บนหาด"],[-9103847562,"Ruined Portal + หีบ 2 ใบ"],[4710293847,"Jungle Temple 4 แห่ง"],[-5019283746,"Village Blacksmith 3 แห่ง"],[6182730495,"End City + Elytra"],[-7283910485,"Woodland Mansion + หีบ"],[1847293847,"Witch Hut ในหนองน้ำ"],[-3049182734,"Trail Ruins ใหม่ 3 แห่ง"]
+  ]},
+  nature: { icon: "🌸", name: "NATURE", seeds: [
+    [8210394756,"Cherry Grove กลางป่าใหญ่"],[-5028374910,"Flower Forest ยักษ์"],[1928374653,"Mushroom Island โผล่"],[-3049182736,"Ice Spikes ยอดน้ำแข็ง"],[7281903847,"Mesa Biome หลากสี"],[-1928374658,"Lush Cave เต็มไปด้วยพืช"],[6182739401,"Bamboo Jungle ยักษ์"],[-7019283745,"Coral Reef หลากสี"],[5019283745,"Savanna + Acacia สวย"],[-4029183745,"Taiga + หิมะขาว"],[7281920384,"Badlands + Canyon"],[-2193847563,"น้ำตกกลางป่าใหญ่"],[6219203847,"Ravine เต็มไปด้วยน้ำ"],[-8019283746,"Snowy Peaks สูงตระหง่าน"],[6291038475,"Stony Peaks + Goat"],[-5018293746,"Cherry Grove + Mountain"],[7201938475,"Flower Forest + River"],[-3049182737,"Sunflower Plains ยักษ์"],[5819273046,"Dripstone Cave สวยงาม"],[-6291048375,"Mushroom Island + Reef"],[4710293845,"Cherry Grove + Village"],[-5018273946,"Ice + Snow + Waterfall"],[7192038475,"Mega Taiga ต้นไม้ยักษ์"],[-2940183745,"Jungle + Bamboo + Temple"],[6281930475,"Valley + River + Village"]
+  ]},
+  island: { icon: "🌊", name: "ISLAND", seeds: [
+    [8210394750,"เกาะกลางทะเล มีหมู่บ้าน"],[-5028374900,"เกาะเล็กกลางมหาสมุทร"],[1928374650,"เกาะ + Shipwreck"],[-3049182700,"เกาะ + Ocean Monument"],[7281903800,"เกาะปาล์ม + หาดทราย"],[-1928374600,"เกาะ 2 เกาะติดกัน"],[6182739400,"เกาะ + Mushroom"],[-7019283700,"เกาะกลางมหาสมุทรเงียบสงบ"],[5019283700,"เกาะ + Coral Reef"],[-4029183700,"เกาะ + ถ้ำใต้ดิน"],[7281920300,"เกาะ + Buried Treasure"],[-2193847500,"เกาะห่างไกลกลางทะเล"],[6219203800,"เกาะ + Ruined Portal"],[-8019283700,"เกาะหิมะกลางทะเล"],[6291038400,"เกาะ + Village สมบูรณ์"],[-5018293700,"เกาะ Tropics สวยงาม"],[7201938400,"เกาะ + Jungle"],[-3049182701,"เกาะหินกลางทะเล"],[5819273000,"เกาะเล็ก + ทรายขาว"],[-6291048300,"เกาะยักษ์กลางมหาสมุทร"],[4710293800,"เกาะ + Pillager Outpost"],[-5018273900,"เกาะ + Mineshaft"],[7192038400,"เกาะปะการังหลากสี"],[-2940183700,"เกาะ + Shipwreck + Reef"],[6281930400,"เกาะเงียบสงบกลางทะเล"]
+  ]}
+};
+
+/* ============ LOCALSTORAGE ============ */
+const LS = { history:'mc_seed_history', favorites:'mc_seed_favorites', player:'mc_seed_player', scores:'mc_seed_scores', theme:'mc_seed_theme', sound:'mc_seed_sound', music:'mc_seed_music', musicVol:'mc_seed_musicVol', musicTempo:'mc_seed_musicTempo', xoScore:'mc_xo_score', chessState:'mc_chess_state' };
+function lsGet(k, f) { try { const v = localStorage.getItem(k); return v ? JSON.parse(v) : f; } catch(e) { return f; } }
+function lsSet(k, v) { try { localStorage.setItem(k, JSON.stringify(v)); } catch(e) {} }
+
+let history = lsGet(LS.history, []);
+let favorites = lsGet(LS.favorites, []);
+let scores = lsGet(LS.scores, {});
+let playerName = lsGet(LS.player, "");
+let soundOn = lsGet(LS.sound, true);
+let musicOn = lsGet(LS.music, true);
+let musicVol = lsGet(LS.musicVol, 40);
+let musicTempo = lsGet(LS.musicTempo, 100);
+let currentTheme = lsGet(LS.theme, "overworld");
+let xoScoreData = lsGet(LS.xoScore, { player: 0, bot: 0, draw: 0 });
+
+/* ============ SFX ============ */
+let audioCtx = null;
+function initAudio() { if (audioCtx) return; try { audioCtx = new (window.AudioContext || window.webkitAudioContext)(); } catch(e) {} }
+function playTone(freq, dur, type = 'square', vol = 0.08, delay = 0) {
+  if (!soundOn || !audioCtx) return;
+  const t0 = audioCtx.currentTime + delay;
+  const osc = audioCtx.createOscillator();
+  const gain = audioCtx.createGain();
+  osc.type = type; osc.frequency.setValueAtTime(freq, t0);
+  gain.gain.setValueAtTime(vol, t0);
+  gain.gain.exponentialRampToValueAtTime(0.0001, t0 + dur);
+  osc.connect(gain); gain.connect(audioCtx.destination);
+  osc.start(t0); osc.stop(t0 + dur + 0.02);
+}
+const sndClick = () => playTone(1000, 0.05, 'square', 0.06);
+const sndRoll = () => [523.25, 659.25, 783.99, 1046.5].forEach((f,i) => playTone(f, 0.12, 'triangle', 0.07, i*0.045));
+const sndSuccess = () => [523.25, 659.25, 783.99, 1046.5].forEach((f,i) => playTone(f, 0.25, 'sine', 0.09, i*0.07));
+const sndError = () => { playTone(180, 0.25, 'sawtooth', 0.06); playTone(140, 0.35, 'sawtooth', 0.05, 0.08); };
+const sndBell = () => { playTone(880, 0.5, 'sine', 0.08); playTone(1320, 0.3, 'sine', 0.04, 0.02); };
+const sndPop = () => { playTone(600, 0.04, 'square', 0.05); playTone(900, 0.06, 'square', 0.05, 0.03); };
+const sndTab = () => { playTone(700, 0.04, 'square', 0.04); playTone(1000, 0.05, 'square', 0.04, 0.03); };
+const sndTheme = () => [440, 554, 659, 880].forEach((f,i) => playTone(f, 0.15, 'triangle', 0.07, i*0.05));
+// Minecraft-like sounds
+const sndStonePlace = () => { playTone(220, 0.12, 'square', 0.08); playTone(180, 0.1, 'square', 0.05, 0.02); };
+const sndGrassPlace = () => { playTone(330, 0.08, 'triangle', 0.07); playTone(260, 0.1, 'triangle', 0.05, 0.03); };
+const sndCapture = () => { playTone(500, 0.06, 'square', 0.09); playTone(400, 0.08, 'square', 0.07, 0.04); playTone(300, 0.1, 'square', 0.06, 0.08); };
+const sndCheck = () => { playTone(880, 0.15, 'square', 0.09); playTone(1100, 0.15, 'square', 0.08, 0.08); };
+
+/* ============ MUSIC ENGINE ============ */
+const N = { C3:130.81,Cs3:138.59,D3:146.83,Ds3:155.56,E3:164.81,F3:174.61,Fs3:185.00,G3:196.00,Gs3:207.65,A3:220.00,As3:233.08,B3:246.94,C4:261.63,Cs4:277.18,D4:293.66,Ds4:311.13,E4:329.63,F4:349.23,Fs4:369.99,G4:392.00,Gs4:415.30,A4:440.00,As4:466.16,B4:493.88,C5:523.25,Cs5:554.37,D5:587.33,Ds5:622.25,E5:659.25,F5:698.46,Fs5:739.99,G5:783.99,Gs5:830.61,A5:880.00,As5:932.33,B5:987.77,C6:1046.50,D6:1174.66,E6:1318.51,G6:1567.98,A6:1760.00 };
+
+const MUSIC_DATA = {
+  overworld: { name:"Overworld Theme", tempo:80,
+    melody:[N.C5,null,N.E5,null,N.G5,null,N.A5,null,N.G5,null,N.E5,null,N.D5,null,N.C5,null,N.G4,null,N.C5,null,N.E5,null,N.D5,null,N.C5,null,N.G4,null,null,null,null,null],
+    bass:[N.C3,N.F3,N.G3,N.C3,N.A3,N.F3,N.G3,N.C3],
+    chords:[[N.C4,N.E4,N.G4],[N.A3,N.C4,N.E4],[N.F3,N.A3,N.C4],[N.G3,N.B3,N.D4],[N.C4,N.E4,N.G4],[N.F3,N.A3,N.C4],[N.G3,N.B3,N.D4],[N.C4,N.E4,N.G4]],
+    waveMelody:'triangle', waveBass:'sine', waveChord:'sine', volMelody:0.09, volBass:0.14, volChord:0.025 },
+  nether: { name:"Nether Theme", tempo:100,
+    melody:[N.D5,null,N.F5,null,N.A5,N.G5,N.F5,null,N.E5,null,N.D5,null,N.C5,null,N.D5,null,N.D5,null,N.F5,null,N.A5,N.As5,N.A5,null,N.G5,null,N.F5,null,N.E5,null,N.D5,null],
+    bass:[N.D3,N.D3,N.As3,N.As3,N.G3,N.G3,N.A3,N.A3],
+    chords:[[N.D4,N.F4,N.A4],[N.As3,N.D4,N.F4],[N.G3,N.As3,N.D4],[N.A3,N.Cs4,N.E4],[N.D4,N.F4,N.A4],[N.As3,N.D4,N.F4],[N.G3,N.As3,N.D4],[N.A3,N.Cs4,N.E4]],
+    waveMelody:'square', waveBass:'sawtooth', waveChord:'triangle', volMelody:0.06, volBass:0.11, volChord:0.02 },
+  end: { name:"End Theme", tempo:70,
+    melody:[N.A4,null,null,N.C5,null,N.E5,null,null,N.D5,null,null,N.C5,null,N.B4,null,null,N.A4,null,null,N.E4,null,N.G4,null,null,N.A4,null,N.C5,null,null,null,null,null],
+    bass:[N.A3,N.E3,N.F3,N.G3,N.A3,N.F3,N.G3,N.A3],
+    chords:[[N.A3,N.C4,N.E4],[N.F3,N.A3,N.C4],[N.C4,N.E4,N.G4],[N.G3,N.B3,N.D4],[N.A3,N.C4,N.E4],[N.F3,N.A3,N.C4],[N.G3,N.B3,N.D4],[N.A3,N.C4,N.E4]],
+    waveMelody:'sine', waveBass:'sine', waveChord:'sine', volMelody:0.10, volBass:0.14, volChord:0.03 },
+  desert: { name:"Desert Theme", tempo:90,
+    melody:[N.E5,null,N.F5,null,N.G5,null,N.A5,null,N.B5,null,N.A5,null,N.G5,null,N.F5,null,N.E5,null,N.F5,null,N.G5,null,N.A5,null,N.G5,null,N.F5,null,N.E5,null,null,null],
+    bass:[N.E3,N.E3,N.A3,N.A3,N.F3,N.F3,N.E3,N.E3],
+    chords:[[N.E4,N.G4,N.B4],[N.A3,N.C4,N.E4],[N.F3,N.A3,N.C4],[N.E4,N.G4,N.B4],[N.E4,N.G4,N.B4],[N.A3,N.C4,N.E4],[N.F3,N.A3,N.C4],[N.E4,N.G4,N.B4]],
+    waveMelody:'triangle', waveBass:'triangle', waveChord:'sine', volMelody:0.08, volBass:0.12, volChord:0.022 },
+  snow: { name:"Snow Theme", tempo:75,
+    melody:[N.G4,null,N.B4,null,N.D5,null,N.E5,null,N.D5,null,N.B4,null,N.A4,null,N.G4,null,N.D5,null,N.E5,null,N.G5,null,N.E5,null,N.D5,null,N.B4,null,N.G4,null,null,null],
+    bass:[N.G3,N.C3,N.D3,N.G3,N.E3,N.C3,N.D3,N.G3],
+    chords:[[N.G3,N.B3,N.D4],[N.C4,N.E4,N.G4],[N.D4,N.Fs4,N.A4],[N.E4,N.G4,N.B4],[N.G3,N.B3,N.D4],[N.C4,N.E4,N.G4],[N.D4,N.Fs4,N.A4],[N.G3,N.B3,N.D4]],
+    waveMelody:'sine', waveBass:'sine', waveChord:'sine', volMelody:0.10, volBass:0.13, volChord:0.028 },
+  ocean: { name:"Ocean Theme", tempo:85,
+    melody:[N.F4,null,N.A4,null,N.C5,null,N.D5,null,N.C5,null,N.A4,null,N.G4,null,N.F4,null,N.A4,null,N.C5,null,N.F5,null,N.E5,null,N.D5,null,N.C5,null,N.A4,null,N.F4,null],
+    bass:[N.F3,N.As3,N.C3,N.F3,N.D3,N.As3,N.C3,N.F3],
+    chords:[[N.F3,N.A3,N.C4],[N.As3,N.D4,N.F4],[N.C4,N.E4,N.G4],[N.D4,N.F4,N.A4],[N.F3,N.A3,N.C4],[N.As3,N.D4,N.F4],[N.C4,N.E4,N.G4],[N.F3,N.A3,N.C4]],
+    waveMelody:'triangle', waveBass:'sine', waveChord:'sine', volMelody:0.09, volBass:0.13, volChord:0.025 },
+  mushroom: { name:"Mushroom Theme", tempo:95,
+    melody:[N.As4,null,N.D5,null,N.F5,null,N.Ds5,null,N.D5,null,N.C5,null,N.As4,null,N.A4,null,N.As4,null,N.D5,null,N.F5,null,N.G5,null,N.F5,null,N.Ds5,null,N.D5,null,N.As4,null],
+    bass:[N.As3,N.Ds3,N.F3,N.As3,N.G3,N.Ds3,N.F3,N.As3],
+    chords:[[N.As3,N.D4,N.F4],[N.Ds4,N.G4,N.As4],[N.F4,N.A4,N.C5],[N.G4,N.As4,N.D5],[N.As3,N.D4,N.F4],[N.Ds4,N.G4,N.As4],[N.F4,N.A4,N.C5],[N.As3,N.D4,N.F4]],
+    waveMelody:'square', waveBass:'triangle', waveChord:'sine', volMelody:0.07, volBass:0.12, volChord:0.022 }
+};
+
+class BGMEngine {
+  constructor() { this.ctx=null; this.masterGain=null; this.playing=false; this.volume=musicVol/100*0.35; this.tempoScale=musicTempo/100; this.theme='overworld'; this.step=0; this.timer=null; }
+  init() {
+    if (this.ctx) return;
+    try { this.ctx = new (window.AudioContext || window.webkitAudioContext)(); this.masterGain = this.ctx.createGain(); this.masterGain.gain.value = this.volume;
+      const filter = this.ctx.createBiquadFilter(); filter.type='lowpass'; filter.frequency.value=3500; filter.Q.value=0.7;
+      this.masterGain.connect(filter); filter.connect(this.ctx.destination);
+    } catch(e) {}
+  }
+  start() { this.init(); if (!this.ctx) return; if (this.ctx.state === 'suspended') this.ctx.resume(); if (this.playing) return; this.playing = true; this.step = 0; this._loop(); }
+  stop() { this.playing = false; if (this.timer) { clearTimeout(this.timer); this.timer = null; } }
+  setTheme(t) { this.theme = t; }
+  setVolume(v) { this.volume = v * 0.35; if (this.masterGain && this.ctx) this.masterGain.gain.setTargetAtTime(this.volume, this.ctx.currentTime, 0.15); }
+  setTempoScale(s) { this.tempoScale = s; }
+  _loop() {
+    if (!this.playing) return;
+    const data = MUSIC_DATA[this.theme] || MUSIC_DATA.overworld;
+    const noteDur = (60 / data.tempo / 2) / this.tempoScale;
+    const mIdx = this.step % data.melody.length;
+    if (data.melody[mIdx]) this._note(data.melody[mIdx], noteDur * 1.8, data.waveMelody, data.volMelody);
+    if (this.step % 4 === 0) {
+      const bIdx = Math.floor(this.step / 4) % data.bass.length;
+      if (data.bass[bIdx]) this._note(data.bass[bIdx], noteDur * 3.2, data.waveBass, data.volBass);
+    }
+    if (this.step % 8 === 0) {
+      const cIdx = Math.floor(this.step / 8) % data.chords.length;
+      const chord = data.chords[cIdx];
+      if (chord) chord.forEach((freq, i) => setTimeout(() => { if (this.playing) this._note(freq, noteDur * 7, data.waveChord, data.volChord); }, i * 12));
+    }
+    this.step++;
+    this.timer = setTimeout(() => this._loop(), noteDur * 1000);
+  }
+  _note(freq, dur, type, vol) {
+    if (!this.ctx || !this.playing) return;
+    const t0 = this.ctx.currentTime;
+    const osc = this.ctx.createOscillator();
+    const gain = this.ctx.createGain();
+    osc.type = type; osc.frequency.value = freq;
+    gain.gain.setValueAtTime(0, t0);
+    gain.gain.linearRampToValueAtTime(vol, t0 + 0.02);
+    gain.gain.setValueAtTime(vol, t0 + dur * 0.5);
+    gain.gain.exponentialRampToValueAtTime(0.0001, t0 + dur);
+    osc.connect(gain); gain.connect(this.masterGain);
+    osc.start(t0); osc.stop(t0 + dur + 0.05);
+  }
+}
+const bgm = new BGMEngine();
+
+/* ============================================================
+   XO GAME
+   ============================================================ */
+const XO = {
+  board: Array(9).fill(null),
+  currentPlayer: 'X', // X = Grass (player), O = Stone (bot/friend)
+  mode: 'easy',
+  finished: false,
+  winLine: null,
+  scoreKey: null
+};
+
+function xoInit() {
+  XO.board = Array(9).fill(null);
+  XO.currentPlayer = 'X';
+  XO.finished = false;
+  XO.winLine = null;
+  renderXOBoard();
+  updateXOStatus('ตาคุณ — เลือกช่องเพื่อวาง 🟩');
+  updateXOScore();
+}
+
+function renderXOBoard() {
+  const board = document.getElementById('xoBoard');
+  board.innerHTML = '';
+  for (let i = 0; i < 9; i++) {
+    const cell = document.createElement('div');
+    cell.className = 'xo-cell';
+    cell.dataset.idx = i;
+    if (XO.board[i]) {
+      cell.classList.add('marked');
+      const mark = document.createElement('div');
+      mark.className = XO.board[i] === 'X' ? 'grass-mark' : 'stone-mark';
+      cell.appendChild(mark);
+    }
+    if (XO.winLine && XO.winLine.includes(i)) cell.classList.add('win-highlight');
+    cell.addEventListener('click', () => xoClick(i));
+    board.appendChild(cell);
+  }
+}
+
+function xoClick(i) {
+  if (XO.finished || XO.board[i]) return;
+  if (XO.mode !== 'friend' && XO.currentPlayer !== 'X') return;
+  makeXOMove(i, XO.currentPlayer);
+  if (XO.finished) return;
+  if (XO.mode !== 'friend') {
+    setTimeout(() => xoBotMove(), 400);
+  }
+}
+
+function makeXOMove(i, player) {
+  XO.board[i] = player;
+  if (player === 'X') sndGrassPlace(); else sndStonePlace();
+  renderXOBoard();
+  const result = xoCheckWin();
+  if (result) {
+    XO.finished = true;
+    XO.winLine = result.line;
+    renderXOBoard();
+    if (result.winner === 'X') {
+      sndSuccess();
+      if (XO.mode !== 'friend') { xoScoreData.player++; saveXOScore(); }
+      updateXOStatus('🎉 คุณชนะ! 🟩 ชนะ 🪨');
+    } else if (result.winner === 'O') {
+      sndError();
+      if (XO.mode !== 'friend') { xoScoreData.bot++; saveXOScore(); }
+      updateXOStatus('💀 แพ้! 🪨 ชนะ 🟩');
+    } else {
+      sndBell();
+      if (XO.mode !== 'friend') { xoScoreData.draw++; saveXOScore(); }
+      updateXOStatus('🤝 เสมอ!');
+    }
+    updateXOScore();
+    return;
+  }
+  XO.currentPlayer = XO.currentPlayer === 'X' ? 'O' : 'X';
+  if (XO.mode === 'friend') {
+    updateXOStatus(XO.currentPlayer === 'X' ? 'ตาผู้เล่น 1 — 🟩' : 'ตาผู้เล่น 2 — 🪨');
+  } else {
+    if (XO.currentPlayer === 'X') updateXOStatus('ตาคุณ — 🟩');
+    else updateXOStatus('บอทกำลังคิด... 🤖');
+  }
+}
+
+function xoBotMove() {
+  if (XO.finished) return;
+  let move;
+  if (XO.mode === 'easy') {
+    move = xoBotEasy();
+  } else {
+    move = xoBotHard();
+  }
+  if (move !== null && move !== undefined) {
+    makeXOMove(move, 'O');
+  }
+}
+
+function xoBotEasy() {
+  // 60% random, 40% smart
+  if (Math.random() < 0.6) {
+    const empty = XO.board.map((v, i) => v === null ? i : null).filter(v => v !== null);
+    return empty[Math.floor(Math.random() * empty.length)];
+  }
+  return xoBotHard();
+}
+
+function xoBotHard() {
+  // Minimax with alpha-beta
+  let best = -Infinity, bestMove = null;
+  for (let i = 0; i < 9; i++) {
+    if (XO.board[i]) continue;
+    XO.board[i] = 'O';
+    let score = xoMinimax(0, false, -Infinity, Infinity);
+    XO.board[i] = null;
+    if (score > best) { best = score; bestMove = i; }
+  }
+  return bestMove;
+}
+
+function xoMinimax(depth, isMax, alpha, beta) {
+  const result = xoCheckWin();
+  if (result) {
+    if (result.winner === 'O') return 10 - depth;
+    if (result.winner === 'X') return depth - 10;
+    return 0;
+  }
+  if (isMax) {
+    let best = -Infinity;
+    for (let i = 0; i < 9; i++) {
+      if (XO.board[i]) continue;
+      XO.board[i] = 'O';
+      best = Math.max(best, xoMinimax(depth + 1, false, alpha, beta));
+      XO.board[i] = null;
+      alpha = Math.max(alpha, best);
+      if (beta <= alpha) break;
+    }
+    return best;
+  } else {
+    let best = Infinity;
+    for (let i = 0; i < 9; i++) {
+      if (XO.board[i]) continue;
+      XO.board[i] = 'X';
+      best = Math.min(best, xoMinimax(depth + 1, true, alpha, beta));
+      XO.board[i] = null;
+      beta = Math.min(beta, best);
+      if (beta <= alpha) break;
+    }
+    return best;
+  }
+}
+
+function xoCheckWin() {
+  const lines = [
+    [0,1,2],[3,4,5],[6,7,8],
+    [0,3,6],[1,4,7],[2,5,8],
+    [0,4,8],[2,4,6]
+  ];
+  for (const line of lines) {
+    const [a,b,c] = line;
+    if (XO.board[a] && XO.board[a] === XO.board[b] && XO.board[a] === XO.board[c]) {
+      return { winner: XO.board[a], line };
+    }
+  }
+  if (XO.board.every(v => v)) return { winner: null, line: null };
+  return null;
+}
+
+function updateXOStatus(msg) { document.getElementById('xoStatus').textContent = msg; }
+function updateXOScore() {
+  const el = document.getElementById('xoScore');
+  if (el) el.textContent = `🟩 ${xoScoreData.player}  —  🤖 ${xoScoreData.bot}  —  🤝 ${xoScoreData.draw}`;
+}
+function saveXOScore() { lsSet(LS.xoScore, xoScoreData); }
+
+/* ============================================================
+   CHESS GAME
+   ============================================================ */
+const CHESS = {
+  board: [],
+  turn: 'white',
+  selected: null, // [r, c]
+  legalMoves: [],
+  lastMove: null, // [[fr,fc],[tr,tc]]
+  mode: 'bot',
+  capturedByWhite: [], // pieces white captured (black pieces)
+  capturedByBlack: [],
+  history: [], // for undo
+  finished: false,
+  moveCount: 1,
+  botThinking: false
+};
+
+// Piece values for AI
+const PIECE_VALUES = { p: 1, n: 3, b: 3, r: 5, q: 9, k: 1000 };
+
+// Piece icons per type
+const PIECE_ICONS = {
+  white: { k: '👨', q: '💎', r: '🏰', b: '🧙', n: '🐴', p: '🧑‍🌾' },
+  black: { k: '🐉', q: '💀', r: '🗿', b: '🧙‍♀️', n: '🐷', p: '🧟' }
+};
+
+function chessInit() {
+  // Uppercase = white, lowercase = black
+  CHESS.board = [
+    ['r','n','b','q','k','b','n','r'],
+    ['p','p','p','p','p','p','p','p'],
+    [null,null,null,null,null,null,null,null],
+    [null,null,null,null,null,null,null,null],
+    [null,null,null,null,null,null,null,null],
+    [null,null,null,null,null,null,null,null],
+    ['P','P','P','P','P','P','P','P'],
+    ['R','N','B','Q','K','B','N','R']
+  ];
+  CHESS.turn = 'white';
+  CHESS.selected = null;
+  CHESS.legalMoves = [];
+  CHESS.lastMove = null;
+  CHESS.capturedByWhite = [];
+  CHESS.capturedByBlack = [];
+  CHESS.history = [];
+  CHESS.finished = false;
+  CHESS.moveCount = 1;
+  CHESS.botThinking = false;
+  renderChessBoard();
+  updateChessStatus();
+  updateCaptured();
+}
+
+function isWhitePiece(p) { return p && p === p.toUpperCase(); }
+function isBlackPiece(p) { return p && p === p.toLowerCase(); }
+function isOpponent(piece, isWhite) {
+  if (!piece) return false;
+  return isWhite ? isBlackPiece(piece) : isWhitePiece(piece);
+}
+function isOwn(piece, isWhite) {
+  if (!piece) return false;
+  return isWhite ? isWhitePiece(piece) : isBlackPiece(piece);
+}
+
+function renderChessBoard() {
+  const board = document.getElementById('chessBoard');
+  board.innerHTML = '';
+  const isWhiteTurn = CHESS.turn === 'white';
+  const inCheck = chessIsInCheck(CHESS.board, isWhiteTurn);
+  // Find king position for check highlight
+  let checkKingPos = null;
+  if (inCheck) {
+    const king = isWhiteTurn ? 'K' : 'k';
+    for (let r = 0; r < 8; r++) for (let c = 0; c < 8; c++)
+      if (CHESS.board[r][c] === king) checkKingPos = [r, c];
+  }
+  for (let r = 0; r < 8; r++) {
+    for (let c = 0; c < 8; c++) {
+      const cell = document.createElement('div');
+      const isLight = (r + c) % 2 === 0;
+      cell.className = `chess-cell ${isLight ? 'light' : 'dark'}`;
+      cell.dataset.r = r;
+      cell.dataset.c = c;
+      // Selected
+      if (CHESS.selected && CHESS.selected[0] === r && CHESS.selected[1] === c) {
+        cell.classList.add('selected');
+      }
+      // Legal move
+      if (CHESS.legalMoves.some(([mr,mc]) => mr === r && mc === c)) {
+        if (CHESS.board[r][c]) cell.classList.add('legal-capture');
+        else cell.classList.add('legal-move');
+      }
+      // Last move highlight
+      if (CHESS.lastMove && ((CHESS.lastMove[0][0] === r && CHESS.lastMove[0][1] === c) || (CHESS.lastMove[1][0] === r && CHESS.lastMove[1][1] === c))) {
+        cell.classList.add('last-move');
+      }
+      // King in check
+      if (checkKingPos && checkKingPos[0] === r && checkKingPos[1] === c) {
+        cell.classList.add('check-king');
+      }
+      // Piece
+      const piece = CHESS.board[r][c];
+      if (piece) {
+        const pieceEl = document.createElement('div');
+        pieceEl.className = 'piece ' + (isWhitePiece(piece) ? 'white-piece' : 'black-piece');
+        const team = isWhitePiece(piece) ? 'white' : 'black';
+        pieceEl.textContent = PIECE_ICONS[team][piece.toLowerCase()];
+        cell.appendChild(pieceEl);
+      }
+      cell.addEventListener('click', () => chessClick(r, c));
+      board.appendChild(cell);
+    }
+  }
+}
+
+function chessClick(r, c) {
+  if (CHESS.finished || CHESS.botThinking) return;
+  if (CHESS.mode === 'bot' && CHESS.turn === 'black') return;
+  
+  const piece = CHESS.board[r][c];
+  const isWhiteTurn = CHESS.turn === 'white';
+  
+  // If a piece is selected and clicked target is legal
+  if (CHESS.selected) {
+    const [sr, sc] = CHESS.selected;
+    if (CHESS.legalMoves.some(([mr, mc]) => mr === r && mc === c)) {
+      chessMakeMove([sr, sc], [r, c]);
+      CHESS.selected = null;
+      CHESS.legalMoves = [];
+      renderChessBoard();
+      if (!CHESS.finished && CHESS.mode === 'bot' && CHESS.turn === 'black') {
+        CHESS.botThinking = true;
+        setTimeout(() => chessBotMove(), 450);
+      }
+      return;
+    }
+  }
+  
+  // Click on own piece = select
+  if (isOwn(piece, isWhiteTurn)) {
+    CHESS.selected = [r, c];
+    CHESS.legalMoves = chessGetLegalMoves(CHESS.board, r, c);
+    sndClick();
+    renderChessBoard();
+  } else {
+    CHESS.selected = null;
+    CHESS.legalMoves = [];
+    renderChessBoard();
+  }
+}
+
+function chessMakeMove(from, to) {
+  const [fr, fc] = from;
+  const [tr, tc] = to;
+  const piece = CHESS.board[fr][fc];
+  const captured = CHESS.board[tr][tc];
+  
+  // Save for undo
+  CHESS.history.push({
+    board: CHESS.board.map(row => [...row]),
+    turn: CHESS.turn,
+    lastMove: CHESS.lastMove,
+    capturedByWhite: [...CHESS.capturedByWhite],
+    capturedByBlack: [...CHESS.capturedByBlack],
+    moveCount: CHESS.moveCount,
+    finished: CHESS.finished
+  });
+  
+  CHESS.board[tr][tc] = piece;
+  CHESS.board[fr][fc] = null;
+  
+  // Pawn promotion (auto to Queen)
+  if (piece === 'P' && tr === 0) CHESS.board[tr][tc] = 'Q';
+  if (piece === 'p' && tr === 7) CHESS.board[tr][tc] = 'q';
+  
+  // Captures
+  if (captured) {
+    sndCapture();
+    if (isWhitePiece(piece)) CHESS.capturedByWhite.push(captured);
+    else CHESS.capturedByBlack.push(captured);
+  } else {
+    sndStonePlace();
+  }
+  
+  CHESS.lastMove = [from, to];
+  CHESS.turn = CHESS.turn === 'white' ? 'black' : 'white';
+  if (CHESS.turn === 'white') CHESS.moveCount++;
+  
+  updateCaptured();
+  
+  // Check game end
+  const opponent = CHESS.turn;
+  const opponentIsWhite = opponent === 'white';
+  const hasMove = chessHasAnyLegalMove(CHESS.board, opponentIsWhite);
+  const inCheck = chessIsInCheck(CHESS.board, opponentIsWhite);
+  
+  if (!hasMove) {
+    CHESS.finished = true;
+    if (inCheck) {
+      const winner = opponentIsWhite ? 'ดำ (Mobs)' : 'ขาว (Overworld)';
+      sndSuccess();
+      updateChessStatus(`🏆 CHECKMATE! ${winner} ชนะ!`);
+    } else {
+      sndBell();
+      updateChessStatus('🤝 STALEMATE — เสมอ!');
+    }
+    renderChessBoard();
+    return;
+  }
+  
+  if (inCheck) {
+    sndCheck();
+    updateChessStatus(`⚠️ ${opponentIsWhite ? 'ขาว' : 'ดำ'} ถูก CHECK!`);
+  } else {
+    updateChessStatus();
+  }
+  renderChessBoard();
+}
+
+function updateChessStatus(override) {
+  const status = document.getElementById('chessStatus');
+  const turn = CHESS.turn === 'white' ? 'ขาว' : 'ดำ';
+  const turnIcon = CHESS.turn === 'white' ? '🟢' : '🔴';
+  const turnTeam = CHESS.turn === 'white' ? 'Overworld' : 'Mobs';
+  if (override) status.textContent = override;
+  else status.textContent = `ตา ${turnIcon} ${turnTeam} (${turn}) — Move ${CHESS.moveCount}`;
+  
+  document.getElementById('chessTurn').textContent = CHESS.turn === 'white' ? 'WHITE' : 'BLACK';
+  document.getElementById('chessTurn').style.color = CHESS.turn === 'white' ? '#FFFFFF' : '#A855F7';
+  document.getElementById('chessMoveNum').textContent = CHESS.moveCount;
+  
+  const inCheck = chessIsInCheck(CHESS.board, CHESS.turn === 'white');
+  const checkEl = document.getElementById('chessInCheck');
+  checkEl.textContent = inCheck ? '⚠️ CHECK!' : '';
+}
+
+function updateCaptured() {
+  const wList = document.getElementById('capturedByWhite');
+  const bList = document.getElementById('capturedByBlack');
+  wList.innerHTML = CHESS.capturedByWhite.map(p => {
+    const team = isWhitePiece(p) ? 'white' : 'black';
+    return `<span title="${p}">${PIECE_ICONS[team][p.toLowerCase()]}</span>`;
+  }).join('');
+  bList.innerHTML = CHESS.capturedByBlack.map(p => {
+    const team = isWhitePiece(p) ? 'white' : 'black';
+    return `<span title="${p}">${PIECE_ICONS[team][p.toLowerCase()]}</span>`;
+  }).join('');
+}
+
+/* ============ CHESS MOVEMENT LOGIC ============ */
+function chessGetPseudoLegalMoves(board, r, c) {
+  const piece = board[r][c];
+  if (!piece) return [];
+  const isWhite = isWhitePiece(piece);
+  const moves = [];
+  
+  const tryAdd = (tr, tc) => {
+    if (tr < 0 || tr > 7 || tc < 0 || tc > 7) return;
+    const target = board[tr][tc];
+    if (!target) { moves.push([tr, tc]); return; }
+    if (isOpponent(target, isWhite)) moves.push([tr, tc]);
+  };
+  
+  const slide = (dr, dc) => {
+    let tr = r + dr, tc = c + dc;
+    while (tr >= 0 && tr <= 7 && tc >= 0 && tc <= 7) {
+      const target = board[tr][tc];
+      if (!target) moves.push([tr, tc]);
+      else { if (isOpponent(target, isWhite)) moves.push([tr, tc]); break; }
+      tr += dr; tc += dc;
+    }
+  };
+  
+  const p = piece.toLowerCase();
+  
+  if (p === 'p') {
+    const dir = isWhite ? -1 : 1;
+    const startRow = isWhite ? 6 : 1;
+    // Forward 1
+    if (r + dir >= 0 && r + dir <= 7 && !board[r + dir][c]) {
+      moves.push([r + dir, c]);
+      // Forward 2 from start
+      if (r === startRow && !board[r + 2*dir][c]) {
+        moves.push([r + 2*dir, c]);
+      }
+    }
+    // Diagonal captures
+    for (const dc of [-1, 1]) {
+      const tr = r + dir, tc = c + dc;
+      if (tr >= 0 && tr <= 7 && tc >= 0 && tc <= 7) {
+        const target = board[tr][tc];
+        if (target && isOpponent(target, isWhite)) moves.push([tr, tc]);
+      }
+    }
+  } else if (p === 'n') {
+    const jumps = [[-2,-1],[-2,1],[-1,-2],[-1,2],[1,-2],[1,2],[2,-1],[2,1]];
+    jumps.forEach(([dr, dc]) => tryAdd(r + dr, c + dc));
+  } else if (p === 'b') {
+    slide(-1,-1); slide(-1,1); slide(1,-1); slide(1,1);
+  } else if (p === 'r') {
+    slide(-1,0); slide(1,0); slide(0,-1); slide(0,1);
+  } else if (p === 'q') {
+    slide(-1,-1); slide(-1,1); slide(1,-1); slide(1,1);
+    slide(-1,0); slide(1,0); slide(0,-1); slide(0,1);
+  } else if (p === 'k') {
+    for (let dr = -1; dr <= 1; dr++) for (let dc = -1; dc <= 1; dc++) {
+      if (dr === 0 && dc === 0) continue;
+      tryAdd(r + dr, c + dc);
+    }
+  }
+  return moves;
+}
+
+function chessGetLegalMoves(board, r, c) {
+  const piece = board[r][c];
+  if (!piece) return [];
+  const isWhite = isWhitePiece(piece);
+  const pseudo = chessGetPseudoLegalMoves(board, r, c);
+  return pseudo.filter(([tr, tc]) => {
+    const newBoard = board.map(row => [...row]);
+    newBoard[tr][tc] = piece;
+    newBoard[r][c] = null;
+    return !chessIsInCheck(newBoard, isWhite);
+  });
+}
+
+function chessIsInCheck(board, isWhite) {
+  const king = isWhite ? 'K' : 'k';
+  let kr = -1, kc = -1;
+  for (let r = 0; r < 8; r++) for (let c = 0; c < 8; c++) {
+    if (board[r][c] === king) { kr = r; kc = c; break; }
+  }
+  if (kr === -1) return false;
+  // Check if any opponent piece attacks king
+  for (let r = 0; r < 8; r++) for (let c = 0; c < 8; c++) {
+    const piece = board[r][c];
+    if (!piece || isOwn(piece, isWhite)) continue;
+    const moves = chessGetPseudoLegalMoves(board, r, c);
+    if (moves.some(([mr, mc]) => mr === kr && mc === kc)) return true;
+  }
+  return false;
+}
+
+function chessHasAnyLegalMove(board, isWhite) {
+  for (let r = 0; r < 8; r++) for (let c = 0; c < 8; c++) {
+    const piece = board[r][c];
+    if (!piece || !isOwn(piece, isWhite)) continue;
+    if (chessGetLegalMoves(board, r, c).length > 0) return true;
+  }
+  return false;
+}
+
+/* ============ CHESS BOT ============ */
+function chessBotMove() {
+  if (CHESS.finished) return;
+  const isWhite = CHESS.turn === 'white';
+  const move = chessBotGetBestMove(CHESS.board, isWhite);
+  CHESS.botThinking = false;
+  if (!move) return;
+  chessMakeMove(move[0], move[1]);
+  if (!CHESS.finished) {
+    const opponentIsWhite = CHESS.turn === 'white';
+    const has = chessHasAnyLegalMove(CHESS.board, opponentIsWhite);
+    const inCheck = chessIsInCheck(CHESS.board, opponentIsWhite);
+    if (!has) {
+      CHESS.finished = true;
+      if (inCheck) {
+        sndSuccess();
+        updateChessStatus(`🏆 CHECKMATE! ${opponentIsWhite ? 'ดำ (Mobs)' : 'ขาว (Overworld)'} ชนะ!`);
+      } else {
+        sndBell();
+        updateChessStatus('🤝 STALEMATE');
+      }
+      renderChessBoard();
+    }
+  }
+}
+
+function chessBotGetBestMove(board, isWhite) {
+  const allMoves = [];
+  for (let r = 0; r < 8; r++) for (let c = 0; c < 8; c++) {
+    const piece = board[r][c];
+    if (!piece || !isOwn(piece, isWhite)) continue;
+    const moves = chessGetLegalMoves(board, r, c);
+    moves.forEach(([tr, tc]) => allMoves.push([[r, c], [tr, tc]]));
+  }
+  if (!allMoves.length) return null;
+  
+  // Score each move
+  const scored = allMoves.map(move => {
+    const [from, to] = move;
+    const [fr, fc] = from, [tr, tc] = to;
+    const piece = board[fr][fc];
+    const target = board[tr][tc];
+    let score = 0;
+    
+    // Capture value
+    if (target) score += PIECE_VALUES[target.toLowerCase()] * 10;
+    
+    // Center control
+    const centerDist = Math.abs(tr - 3.5) + Math.abs(tc - 3.5);
+    score += (7 - centerDist) * 0.5;
+    
+    // Pawn advancement
+    if (piece.toLowerCase() === 'p') {
+      const adv = isWhite ? (6 - tr) : (tr - 1);
+      score += adv * 0.8;
+    }
+    
+    // Simulate move to check if it gives check or opens opportunities
+    const newBoard = board.map(row => [...row]);
+    newBoard[tr][tc] = piece;
+    newBoard[fr][fc] = null;
+    
+    // Check bonus
+    if (chessIsInCheck(newBoard, !isWhite)) score += 15;
+    
+    // Avoid moving to squares attacked by opponent
+    // Check if piece would be capturable
+    const safe = !chessIsAttacked(newBoard, tr, tc, !isWhite);
+    if (!safe && target === null) score -= PIECE_VALUES[piece.toLowerCase()] * 3;
+    if (!safe && target) score -= PIECE_VALUES[piece.toLowerCase()] * 1;
+    
+    // Small random to break ties
+    score += Math.random() * 2;
+    
+    return { move, score };
+  });
+  
+  scored.sort((a, b) => b.score - a.score);
+  return scored[0].move;
+}
+
+function chessIsAttacked(board, r, c, byWhite) {
+  for (let rr = 0; rr < 8; rr++) for (let cc = 0; cc < 8; cc++) {
+    const piece = board[rr][cc];
+    if (!piece || !isOwn(piece, byWhite)) continue;
+    const moves = chessGetPseudoLegalMoves(board, rr, cc);
+    if (moves.some(([mr, mc]) => mr === r && mc === c)) return true;
+  }
+  return false;
+}
+
+function chessUndo() {
+  if (CHESS.history.length === 0) { showToast('ไม่มี move ให้ undo', 'error'); return; }
+  // Undo 2 moves if vs bot (player + bot)
+  let count = CHESS.mode === 'bot' ? Math.min(2, CHESS.history.length) : 1;
+  for (let i = 0; i < count; i++) {
+    const state = CHESS.history.pop();
+    if (!state) break;
+    CHESS.board = state.board;
+    CHESS.turn = state.turn;
+    CHESS.lastMove = state.lastMove;
+    CHESS.capturedByWhite = state.capturedByWhite;
+    CHESS.capturedByBlack = state.capturedByBlack;
+    CHESS.moveCount = state.moveCount;
+    CHESS.finished = state.finished;
+  }
+  CHESS.selected = null;
+  CHESS.legalMoves = [];
+  CHESS.botThinking = false;
+  renderChessBoard();
+  updateCaptured();
+  updateChessStatus();
+  sndPop();
+}
+
+/* ============ CORE UTILS ============ */
+function getDifficulty(idx) {
+  if (idx <= 25) return { label: "MINING", level: "easy", pts: 20 };
+  if (idx <= 55) return { label: "BUILDING", level: "medium", pts: 30 };
+  if (idx <= 90) return { label: "EXPLORE", level: "medium", pts: 40 };
+  if (idx <= 120) return { label: "COMBAT", level: "hard", pts: 60 };
+  if (idx <= 150) return { label: "FARMING", level: "medium", pts: 30 };
+  if (idx <= 175) return { label: "NETHER/END", level: "hard", pts: 80 };
+  return { label: "SPEED", level: "expert", pts: 100 };
+}
+
+let currentSeed = null;
+let currentChallenge = null;
+let currentIndex = 0;
+let currentDifficulty = null;
+let currentCategory = 'speed';
+const $ = id => document.getElementById(id);
+
+const splashList = ["Minecraft!","Seed ดี!","สุ่มเลย!","หา Diamond!","ไป Nether!","ปราบ Dragon!","สนุกแน่นอน!","200 โจทย์!","100 Seeds!","7 ธีม!","มี BGM!","มีเสียง!","มี XO!","มีหมากรุก!"];
+function cycleSplash() { $('splashText').textContent = splashList[Math.floor(Math.random()*splashList.length)]; }
+
+function applyTheme(theme) {
+  currentTheme = theme;
+  document.body.dataset.theme = theme;
+  document.querySelectorAll('.theme-btn').forEach(b => b.classList.toggle('active', b.dataset.theme === theme));
+  lsSet(LS.theme, theme);
+  bgm.setTheme(theme);
+  const data = MUSIC_DATA[theme];
+  if (data) $('mpNowTitle').textContent = data.name;
+}
+
+function getPlayer() { return playerName || "Player"; }
+function getScore() { return scores[getPlayer()]?.points || 0; }
+function addScore(pts) {
+  const p = getPlayer();
+  if (!scores[p]) scores[p] = { points: 0, done: 0 };
+  scores[p].points += pts;
+  scores[p].done += 1;
+  lsSet(LS.scores, scores);
+  updateScoreUI();
+  return scores[p];
+}
+function updateScoreUI() {
+  $('scoreValue').textContent = getScore();
+  $('xpLevel').textContent = `${getPlayer()} • ${getScore()} pts`;
+}
+
+function pushHistory(seed, challenge, extra = {}) {
+  history.unshift({ seed, challenge, ts: Date.now(), ...extra });
+  if (history.length > 50) history.length = 50;
+  lsSet(LS.history, history);
+  renderHistory();
+}
+function renderHistory() {
+  const $cl = $('chatLog');
+  if (history.length === 0) {
+    $cl.innerHTML = '<div class="chat-line"><span class="chat-prefix">[SeedGame]</span><span class="chat-msg">ยินดีต้อนรับ! กด ROLL เพื่อเริ่ม</span></div>';
+    return;
+  }
+  $cl.innerHTML = history.slice(0, 8).map(h => {
+    const cls = h.completed ? ' success' : '';
+    const pre = h.completed ? '[✔ DONE]' : '[Seed]';
+    return `<div class="chat-line${cls}"><span class="chat-prefix">${pre}</span><span class="chat-seed">${h.seed}</span><span class="chat-msg">${h.challenge}</span></div>`;
+  }).join('');
+}
+
+function isFavorite(s) { return favorites.includes(s); }
+function toggleFavorite(s) {
+  const i = favorites.indexOf(s);
+  if (i >= 0) { favorites.splice(i, 1); return false; }
+  favorites.unshift(s);
+  if (favorites.length > 100) favorites.length = 100;
+  return true;
+}
+function saveFavorites() { lsSet(LS.favorites, favorites); }
+function findSeedTag(seed) {
+  for (const cat of Object.values(library)) for (const s of cat.seeds) if (s[0] === seed) return s[1];
+  const h = history.find(x => x.seed === seed);
+  return h ? h.challenge : "Seed ที่บันทึกไว้";
+}
+
+function randomSeed() { return Math.floor(Math.random() * 4294967296) - 2147483648; }
+function randomChallenge() {
+  const i = Math.floor(Math.random() * challenges.length);
+  currentIndex = i + 1;
+  currentDifficulty = getDifficulty(currentIndex);
+  return challenges[i];
+}
+function rollAll() {
+  initAudio(); sndRoll();
+  currentSeed = randomSeed();
+  currentChallenge = randomChallenge();
+  const gp = $('guiPanel');
+  gp.classList.remove('spinning'); void gp.offsetWidth; gp.classList.add('spinning');
+  setTimeout(() => {
+    $('seedValue').textContent = currentSeed;
+    $('seedValue').classList.remove('empty');
+    $('challengeValue').textContent = currentChallenge;
+    $('challengeValue').classList.remove('empty');
+    $('counter').textContent = currentIndex + ' / ' + challenges.length;
+    const db = $('difficultyBadge');
+    db.style.display = 'inline-block';
+    db.textContent = currentDifficulty.label;
+    db.className = 'slot-difficulty ' + currentDifficulty.level;
+    $('doneBtn').disabled = false;
+  }, 60);
+  $('copyBtn').classList.remove('copied');
+  $('copyBtn').textContent = '📋 COPY';
+  updateStarUI();
+  setTimeout(() => pushHistory(currentSeed, currentChallenge), 180);
+}
+function updateStarUI() {
+  const sb = $('starBtn');
+  if (currentSeed !== null && isFavorite(currentSeed)) sb.classList.add('active');
+  else sb.classList.remove('active');
+}
+
+function copyText(text, onDone) {
+  if (navigator.clipboard && navigator.clipboard.writeText)
+    navigator.clipboard.writeText(text).then(onDone).catch(() => fallbackCopy(text, onDone));
+  else fallbackCopy(text, onDone);
+}
+function fallbackCopy(text, cb) {
+  const ta = document.createElement('textarea');
+  ta.value = text; ta.style.position = 'fixed'; ta.style.opacity = '0';
+  document.body.appendChild(ta); ta.select();
+  try { document.execCommand('copy'); cb && cb(); }
+  catch(e) { showToast('คัดลอกไม่ได้', 'error'); }
+  document.body.removeChild(ta);
+}
+function copySeed() {
+  if (currentSeed === null) { sndError(); showToast('ยังไม่มี Seed', 'error'); return; }
+  copyText(String(currentSeed), () => {
+    sndPop();
+    $('copyBtn').textContent = '✔ COPIED!';
+    $('copyBtn').classList.add('copied');
+    showToast('คัดลอก Seed: ' + currentSeed);
+    setTimeout(() => { $('copyBtn').textContent = '📋 COPY'; $('copyBtn').classList.remove('copied'); }, 1800);
+  });
+}
+
+function completeChallenge() {
+  if (!currentChallenge) { sndError(); showToast('ยังไม่มีโจทย์', 'error'); return; }
+  const pts = currentDifficulty?.pts || 30;
+  const newScore = addScore(pts);
+  sndSuccess();
+  showToast(`+${pts} คะแนน! รวม ${newScore.points}`, 'success');
+  history.unshift({ seed: currentSeed, challenge: currentChallenge, ts: Date.now(), completed: true, points: pts });
+  if (history.length > 50) history.length = 50;
+  lsSet(LS.history, history);
+  renderHistory();
+  $('doneBtn').disabled = true;
+}
+
+let toastTimer = null;
+function showToast(msg, type) {
+  $('toastMsg').textContent = msg;
+  const t = $('toast');
+  t.classList.remove('show', 'error', 'enchant', 'success');
+  if (type === 'error') t.classList.add('error');
+  else if (type === 'enchant') t.classList.add('enchant');
+  else if (type === 'success') t.classList.add('success');
+  void t.offsetWidth; t.classList.add('show');
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => t.classList.remove('show'), 2400);
+}
+
+/* ============ LIBRARY / LEADERBOARD ============ */
+function renderTabs() {
+  const keys = ['speed', 'loot', 'nature', 'island', 'fav'];
+  const tabData = { speed: library.speed, loot: library.loot, nature: library.nature, island: library.island, fav: { icon: "⭐", name: "FAVORITES" } };
+  $('libTabs').innerHTML = keys.map(k => {
+    const cat = tabData[k];
+    const count = k === 'fav' ? favorites.length : 25;
+    return `<button class="tab-btn ${k === currentCategory ? 'active' : ''}" data-cat="${k}"><span class="t-icon">${cat.icon}</span><span>${cat.name}</span><span class="t-count">${count}</span></button>`;
+  }).join('');
+  $('libTabs').querySelectorAll('.tab-btn').forEach(btn => {
+    btn.addEventListener('click', () => { sndTab(); currentCategory = btn.dataset.cat; renderTabs(); renderGrid(); });
+  });
+}
+function renderGrid() {
+  let seeds;
+  if (currentCategory === 'fav') seeds = favorites.map(s => [s, findSeedTag(s)]);
+  else seeds = library[currentCategory]?.seeds || [];
+  if (!seeds.length) {
+    $('libGrid').innerHTML = `<div class="lib-empty">${currentCategory === 'fav' ? 'ยังไม่มี Favorites' : 'ไม่มีข้อมูล'}</div>`;
+    return;
+  }
+  $('libGrid').innerHTML = seeds.map((s, i) => {
+    const id = s[0], tag = s[1];
+    const selected = (currentSeed === id) ? ' selected' : '';
+    const fav = isFavorite(id) ? ' active' : '';
+    return `<div class="lib-slot${selected}" data-seed="${id}"><div class="sc-tooltip"><span class="tt-seed">Seed: ${id}</span><span class="tt-tag">${tag}</span></div><div class="sc-num">#${String(i+1).padStart(2,'0')}</div><div class="fav-star${fav}" data-fav="${id}">★</div><div class="sc-id">${id}</div><div class="sc-tag">${tag}</div></div>`;
+  }).join('');
+  $('libGrid').querySelectorAll('.lib-slot').forEach(slot => {
+    slot.addEventListener('click', (e) => {
+      if (e.target.classList.contains('fav-star')) {
+        e.stopPropagation();
+        const seedVal = Number(e.target.dataset.fav);
+        const active = toggleFavorite(seedVal);
+        saveFavorites();
+        e.target.classList.toggle('active', active);
+        sndPop();
+        showToast(active ? '⭐ เพิ่ม Favorite' : 'เอาออกแล้ว', 'enchant');
+        if (currentCategory === 'fav') { renderTabs(); renderGrid(); }
+        updateStarUI();
+        return;
+      }
+      pickLibrarySeed(Number(slot.dataset.seed), slot);
+    });
+  });
+}
+function pickLibrarySeed(seedVal, slotEl) {
+  initAudio();
+  currentSeed = seedVal;
+  $('seedValue').textContent = seedVal;
+  $('seedValue').classList.remove('empty');
+  $('libGrid').querySelectorAll('.lib-slot').forEach(c => c.classList.remove('selected'));
+  if (slotEl) slotEl.classList.add('selected');
+  updateStarUI();
+  copyText(String(seedVal), () => { sndBell(); showToast('เลือก + คัดลอก: ' + seedVal, 'enchant'); });
+}
+function openLibrary() { initAudio(); sndPop(); $('libModal').classList.add('open'); renderTabs(); renderGrid(); }
+function closeLibrary() { $('libModal').classList.remove('open'); }
+
+function renderLeaderboard() {
+  const entries = Object.entries(scores).map(([name, s]) => ({ name, points: s.points || 0, done: s.done || 0 })).sort((a, b) => b.points - a.points || b.done - a.done);
+  if (!entries.length) { $('lbList').innerHTML = '<div class="lb-empty">ยังไม่มีคะแนน</div>'; return; }
+  const me = getPlayer();
+  $('lbList').innerHTML = entries.map((e, i) => {
+    const rank = i + 1;
+    const medal = rank === 1 ? '🥇' : rank === 2 ? '🥈' : rank === 3 ? '🥉' : `#${rank}`;
+    const cls = `lb-row${rank <= 3 ? ' rank-' + rank : ''}${e.name === me ? ' me' : ''}`;
+    return `<div class="${cls}"><div class="lb-rank">${medal}</div><div class="lb-name">${e.name}<span class="lb-stats">ทำสำเร็จ ${e.done} ครั้ง</span></div><div class="lb-score">${e.points}</div></div>`;
+  }).join('');
+}
+function openLeaderboard() { initAudio(); sndBell(); $('lbModal').classList.add('open'); renderLeaderboard(); }
+function closeLeaderboard() { $('lbModal').classList.remove('open'); }
+
+function updateSoundUI() {
+  $('soundBtn').textContent = soundOn ? '🔊' : '🔇';
+  $('soundBtn').classList.toggle('muted', !soundOn);
+}
+function updateMusicUI() {
+  $('musicBtn').classList.toggle('muted', !musicOn);
+  $('musicBtn').classList.toggle('music-btn-playing', musicOn);
+  $('mpValue').textContent = musicVol + '%';
+  $('mpTempoVal').textContent = musicTempo + '%';
+  $('mpVolume').value = musicVol;
+  $('mpTempo').value = musicTempo;
+}
+function tryStartMusic() {
+  if (!musicOn) return;
+  initAudio();
+  bgm.setTheme(currentTheme);
+  bgm.setVolume(musicVol / 100);
+  bgm.setTempoScale(musicTempo / 100);
+  bgm.start();
+}
+document.addEventListener('pointerdown', () => { initAudio(); tryStartMusic(); }, { once: true });
+
+/* ============ EVENTS ============ */
+$('rollBtn').addEventListener('click', rollAll);
+$('rerollBtn').addEventListener('click', rollAll);
+$('copyBtn').addEventListener('click', copySeed);
+$('doneBtn').addEventListener('click', completeChallenge);
+$('libraryBtn').addEventListener('click', openLibrary);
+$('leaderboardBtn').addEventListener('click', openLeaderboard);
+$('closeLibBtn').addEventListener('click', () => { sndClick(); closeLibrary(); });
+$('closeLbBtn').addEventListener('click', () => { sndClick(); closeLeaderboard(); });
+
+// XO
+$('xoBtn').addEventListener('click', () => { initAudio(); sndPop(); xoInit(); $('xoModal').classList.add('open'); });
+$('closeXoBtn').addEventListener('click', () => { sndClick(); $('xoModal').classList.remove('open'); });
+$('xoReset').addEventListener('click', () => { sndClick(); xoInit(); });
+$('xoScoreReset').addEventListener('click', () => {
+  if (confirm('รีเซ็ตสกอร์ XO?')) { xoScoreData = { player:0, bot:0, draw:0 }; saveXOScore(); updateXOScore(); sndPop(); }
+});
+$('xoModes').querySelectorAll('.xo-mode').forEach(btn => {
+  btn.addEventListener('click', () => {
+    sndTab();
+    XO.mode = btn.dataset.mode;
+    $('xoModes').querySelectorAll('.xo-mode').forEach(b => b.classList.toggle('active', b === btn));
+    xoInit();
+  });
+});
+
+// Chess
+$('chessBtn').addEventListener('click', () => { initAudio(); sndPop(); chessInit(); $('chessModal').classList.add('open'); });
+$('closeChessBtn').addEventListener('click', () => { sndClick(); $('chessModal').classList.remove('open'); });
+$('chessReset').addEventListener('click', () => {
+  if (confirm('เริ่มเกมหมากรุกใหม่?')) { sndClick(); chessInit(); }
+});
+$('chessUndo').addEventListener('click', chessUndo);
+$('chessModeBot').addEventListener('click', () => {
+  sndTab();
+  CHESS.mode = 'bot';
+  $('chessModeBot').classList.add('active');
+  $('chessModeFriend').classList.remove('active');
+  chessInit();
+});
+$('chessModeFriend').addEventListener('click', () => {
+  sndTab();
+  CHESS.mode = 'friend';
+  $('chessModeFriend').classList.add('active');
+  $('chessModeBot').classList.remove('active');
+  chessInit();
+});
+
+$('starBtn').addEventListener('click', () => {
+  if (currentSeed === null) { sndError(); showToast('ยังไม่มี Seed', 'error'); return; }
+  const active = toggleFavorite(currentSeed);
+  saveFavorites(); updateStarUI(); sndPop();
+  showToast(active ? '⭐ เพิ่ม Favorite' : 'เอาออกแล้ว', 'enchant');
+});
+
+document.querySelectorAll('.theme-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    initAudio(); sndTheme();
+    applyTheme(btn.dataset.theme);
+    const names = { overworld:'Overworld', nether:'Nether', end:'End', desert:'Desert', snow:'Snow', ocean:'Ocean', mushroom:'Mushroom' };
+    showToast('🎵 ' + names[btn.dataset.theme] + ' Theme', 'enchant');
+  });
+});
+
+$('soundBtn').addEventListener('click', () => {
+  initAudio(); soundOn = !soundOn;
+  lsSet(LS.sound, soundOn); updateSoundUI();
+  if (soundOn) { sndPop(); showToast('เปิด SFX'); } else showToast('ปิด SFX');
+});
+
+$('musicBtn').addEventListener('click', (e) => { e.stopPropagation(); $('musicPopover').classList.toggle('open'); });
+$('musicPopover').addEventListener('click', (e) => e.stopPropagation());
+document.addEventListener('click', () => $('musicPopover').classList.remove('open'));
+
+$('mpVolume').addEventListener('input', (e) => {
+  musicVol = Number(e.target.value);
+  lsSet(LS.musicVol, musicVol);
+  $('mpValue').textContent = musicVol + '%';
+  bgm.setVolume(musicVol / 100);
+  if (!musicOn && musicVol > 0) { musicOn = true; lsSet(LS.music, true); updateMusicUI(); tryStartMusic(); }
+});
+$('mpTempo').addEventListener('input', (e) => {
+  musicTempo = Number(e.target.value);
+  lsSet(LS.musicTempo, musicTempo);
+  $('mpTempoVal').textContent = musicTempo + '%';
+  bgm.setTempoScale(musicTempo / 100);
+});
+
+$('playerName').addEventListener('input', (e) => {
+  playerName = e.target.value.trim().slice(0, 16);
+  lsSet(LS.player, playerName);
+  updateScoreUI();
+  if ($('lbModal').classList.contains('open')) renderLeaderboard();
+});
+
+$('libModal').addEventListener('click', (e) => { if (e.target === $('libModal')) closeLibrary(); });
+$('lbModal').addEventListener('click', (e) => { if (e.target === $('lbModal')) closeLeaderboard(); });
+$('xoModal').addEventListener('click', (e) => { if (e.target === $('xoModal')) $('xoModal').classList.remove('open'); });
+$('chessModal').addEventListener('click', (e) => { if (e.target === $('chessModal')) $('chessModal').classList.remove('open'); });
+
+document.addEventListener('keydown', (e) => {
+  if (e.code === 'Escape') {
+    ['libModal','lbModal','xoModal','chessModal'].forEach(id => $(id).classList.remove('open'));
+    $('musicPopover').classList.remove('open');
+    return;
+  }
+  const tag = document.activeElement.tagName;
+  if (e.code === 'Space' && tag !== 'BUTTON' && tag !== 'INPUT'
+      && !$('libModal').classList.contains('open') && !$('lbModal').classList.contains('open')
+      && !$('xoModal').classList.contains('open') && !$('chessModal').classList.contains('open')) {
+    e.preventDefault(); rollAll();
+  }
+  if (e.code === 'KeyM' && tag !== 'INPUT') {
+    musicOn = !musicOn; lsSet(LS.music, musicOn); updateMusicUI();
+    if (musicOn) tryStartMusic(); else bgm.stop();
+  }
+});
+
+/* ============ INIT ============ */
+if (playerName) $('playerName').value = playerName;
+applyTheme(currentTheme);
+updateSoundUI();
+updateMusicUI();
+updateScoreUI();
+renderHistory();
+cycleSplash();
+setInterval(cycleSplash, 4000);
+updateXOScore();
+</script>
+</body>
+</html>
